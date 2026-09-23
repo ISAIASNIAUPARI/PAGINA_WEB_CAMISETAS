@@ -1,177 +1,145 @@
 'use client'
 
-import React, { createContext, useContext, useLayoutEffect, useRef, useState } from 'react'
+import React, { createContext, useContext } from 'react'
 
+import { useEditOptional } from '@/components/admin/EditProvider'
+import { useIsMobileView } from '@/components/admin/useIsMobileView'
 import { SplitText } from '@/components/motion'
+import { textColorProps, textSizeProps } from '@/lib/text-colors'
+import type { ImageRef, TextStyles } from '@/lib/types'
+
+import { EditableImage } from './EditableImage'
+import { EditableText } from './EditableText'
 
 /**
- * Capa de edición en línea. En el sitio público `edit` es false y todo se
- * renderiza como HTML normal; en /admin, AdminApp envuelve el sitio con
- * <EditContext.Provider value={{ edit: true, ... }}>.
+ * Adaptadores entre las secciones de LAMS y la capa de edición del protocolo
+ * (EditableText / EditableImage de la Fase E):
+ *
+ *  · En el sitio público no montan nada del admin: renderizan el HTML de
+ *    siempre, con las animaciones (titulares por palabras) y los overrides de
+ *    color/tamaño/grosor que el cliente haya guardado.
+ *  · En /admin (dentro de <EditProvider>) el texto se SELECCIONA y se edita en
+ *    el sidebar, igual que en La Gloria.
  */
-type EditApi = {
-  edit: boolean
-  uploadImage?: (file: File) => Promise<string>
-  uploadVideo?: (file: File, onProgress: (p: number) => void) => Promise<string>
+
+/** true solo dentro del panel /admin. */
+export function useEditMode() {
+  return !!useEditOptional()
 }
 
-export const EditContext = createContext<EditApi>({ edit: false })
-export const useEdit = () => useContext(EditContext)
+type Scope = { styles: TextStyles; patch?: (next: TextStyles) => void }
+const StylesScope = createContext<Scope>({ styles: {} })
 
-type Tag = 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'div' | 'span' | 'em' | 'strong'
+/** Envuelve una sección: los <Txt k="…"> de adentro guardan su estilo aquí. */
+export function TextStylesScope({ styles, patch, children }: { styles: TextStyles; patch?: (next: TextStyles) => void; children: React.ReactNode }) {
+  return <StylesScope.Provider value={{ styles, patch }}>{children}</StylesScope.Provider>
+}
 
-/**
- * Texto editable. En /admin es contentEditable; el valor NUNCA se pasa como
- * children mientras se edita — se sincroniza por ref solo cuando el campo no
- * tiene el foco (error #1 del protocolo: si no, el texto salta de campo).
- */
+type Tag = 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'div' | 'span' | 'strong'
+
 export function Txt({
+  k,
   value,
   onChange,
   as = 'span',
   className,
   split,
   delay,
-  multiline,
+  label,
 }: {
+  /** Clave estable del texto: con ella se guardan su color/tamaño/grosor. */
+  k: string
   value: string
   onChange?: (v: string) => void
-  as?: Tag
+  as?: Tag | 'em'
   className?: string
-  /** En el sitio público: entra palabra por palabra. */
   split?: boolean
   delay?: number
-  multiline?: boolean
+  label?: string
 }) {
-  const { edit } = useEdit()
-  const ref = useRef<HTMLElement>(null)
-  const focused = useRef(false)
+  const edit = useEditMode()
+  const { styles, patch } = useContext(StylesScope)
+  const isMobile = useIsMobileView()
+  const tag = (as === 'em' ? 'span' : as) as Tag
+  const cls = as === 'em' ? `${className ?? ''} italic` : className
 
-  useLayoutEffect(() => {
-    if (edit && ref.current && !focused.current && ref.current.innerText !== value) {
-      ref.current.innerText = value
-    }
-  }, [edit, value])
-
-  if (!edit || !onChange) {
-    const Tag = as
-    return <Tag className={className}>{split ? <SplitText text={value} delay={delay} /> : value}</Tag>
+  if (edit && onChange) {
+    const color = textColorProps(styles.textColors, (tc) => patch?.({ ...styles, textColors: tc }))(k)
+    const sizeWeight = textSizeProps(styles.textSizes, styles.textWeights, (next) => patch?.({ ...styles, ...next }))(k)
+    return (
+      <EditableText
+        as={tag}
+        edit
+        value={value}
+        onChange={onChange}
+        className={cls}
+        stopClickNavigation
+        {...(patch ? color : {})}
+        {...(patch ? sizeWeight : {})}
+        label={label ?? color.label}
+      />
+    )
   }
 
-  return React.createElement(as, {
-    ref,
-    className: `${className ?? ''} ${as === 'span' || as === 'em' || as === 'strong' ? 'inline-block' : 'block'} cursor-text rounded-sm outline-dashed outline-1 outline-transparent hover:outline-violet/70 focus:outline-violet focus:outline-2 focus:outline-solid`,
-    contentEditable: true,
-    suppressContentEditableWarning: true,
-    spellCheck: false,
-    onFocus: () => (focused.current = true),
-    onBlur: (e: React.FocusEvent<HTMLElement>) => {
-      focused.current = false
-      const next = e.currentTarget.innerText.replace(/ /g, ' ').trim()
-      if (next !== value) onChange(next)
-    },
-    onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
-      if (e.key === 'Enter' && !multiline) {
-        e.preventDefault()
-        e.currentTarget.blur()
-      }
-    },
-    onClick: (e: React.MouseEvent) => e.preventDefault(),
-  })
+  const c = styles.textColors?.[k]
+  const size = isMobile ? styles.textSizes?.[k]?.m : styles.textSizes?.[k]?.d
+  const w = styles.textWeights?.[k]
+  const style: React.CSSProperties | undefined =
+    c || size || w ? { ...(c ? { color: `var(--color-${c})` } : null), ...(size ? { fontSize: size } : null), ...(w ? { fontWeight: w } : null) } : undefined
+
+  return React.createElement(tag, { className: cls, style }, split && !edit ? <SplitText text={value} delay={delay} /> : value)
 }
 
-/** Botón de "Cambiar imagen" que se superpone a una imagen en /admin. */
-export function ImageSwap({ onChange, label = 'Cambiar imagen' }: { onChange?: (url: string) => void; label?: string }) {
-  const { edit, uploadImage } = useEdit()
-  const [busy, setBusy] = useState(false)
-  const [err, setErr] = useState('')
-  if (!edit || !onChange || !uploadImage) return null
-  return (
-    <label
-      className="absolute inset-x-3 bottom-3 z-20 flex cursor-pointer items-center justify-center gap-2 rounded-md border border-violet/60 bg-ink/85 px-3 py-2 font-mono text-[11px] tracking-widest text-snow uppercase backdrop-blur hover:bg-plum"
-      onClick={(e) => e.stopPropagation()}
-    >
-      {busy ? 'Subiendo…' : err || label}
-      <input
-        type="file"
-        accept="image/jpeg,image/png,image/webp,image/avif"
-        className="hidden"
-        disabled={busy}
-        onChange={async (e) => {
-          const f = e.target.files?.[0]
-          e.target.value = ''
-          if (!f) return
-          setBusy(true)
-          setErr('')
-          try {
-            onChange(await uploadImage(f))
-          } catch (x) {
-            setErr(x instanceof Error ? x.message : 'Error al subir')
-          } finally {
-            setBusy(false)
-          }
-        }}
-      />
-    </label>
-  )
-}
-
-/** Botón de "Cambiar video" (sube directo navegador → Cloudinary). */
-export function VideoSwap({ onChange }: { onChange?: (url: string) => void }) {
-  const { edit, uploadVideo } = useEdit()
-  const [progress, setProgress] = useState<number | null>(null)
-  const [err, setErr] = useState('')
-  if (!edit || !onChange || !uploadVideo) return null
-  return (
-    <label className="absolute inset-x-3 top-3 z-20 flex cursor-pointer items-center justify-center rounded-md border border-violet/60 bg-ink/85 px-3 py-2 font-mono text-[11px] tracking-widest text-snow uppercase backdrop-blur hover:bg-plum">
-      {progress !== null ? `Subiendo ${progress}%` : err || 'Cambiar video'}
-      <input
-        type="file"
-        accept="video/mp4,video/quicktime,video/webm"
-        className="hidden"
-        disabled={progress !== null}
-        onChange={async (e) => {
-          const f = e.target.files?.[0]
-          e.target.value = ''
-          if (!f) return
-          setErr('')
-          setProgress(0)
-          try {
-            onChange(await uploadVideo(f, setProgress))
-          } catch (x) {
-            setErr(x instanceof Error ? x.message : 'Error al subir')
-          } finally {
-            setProgress(null)
-          }
-        }}
-      />
-    </label>
-  )
-}
-
-/** Campo pequeño para datos que no son texto visible (links, precios, colores). */
-export function AdminField({
-  label,
-  value,
+/** Imagen: <img> normal en el sitio; seleccionable (cambiar + punto focal) en /admin. */
+export function Img({
+  image,
   onChange,
-  type = 'text',
+  className,
+  imgClassName,
+  aspectRatio = 3 / 4,
+  eager,
 }: {
-  label: string
-  value: string | number
-  onChange?: (v: string) => void
-  type?: 'text' | 'number' | 'color' | 'url'
+  image: ImageRef
+  onChange?: (next: ImageRef) => void
+  className?: string
+  imgClassName?: string
+  aspectRatio?: number
+  eager?: boolean
 }) {
-  const { edit } = useEdit()
-  if (!edit || !onChange) return null
-  return (
-    <label className="flex items-center gap-2 rounded border border-violet/40 bg-ink/90 px-2 py-1 font-mono text-[10px] tracking-wider text-lilac uppercase">
-      {label}
-      <input
-        type={type}
-        defaultValue={value}
-        onBlur={(e) => e.target.value !== String(value) && onChange(e.target.value)}
-        className={`min-w-0 flex-1 bg-transparent text-[12px] normal-case text-snow outline-none ${type === 'color' ? 'h-5 w-8 flex-none' : ''}`}
+  const edit = useEditMode()
+  const pos = image.focalX != null && image.focalY != null ? `${image.focalX}% ${image.focalY}%` : undefined
+  if (edit && onChange) {
+    return (
+      <EditableImage
+        edit
+        fill
+        src={image.url}
+        alt={image.alt}
+        className={className}
+        imgClassName={imgClassName}
+        aspectRatio={aspectRatio}
+        focalX={image.focalX}
+        focalY={image.focalY}
+        onChange={(url) => onChange({ ...image, url })}
+        onFocalChange={(x, y) => onChange({ ...image, focalX: x, focalY: y })}
       />
-    </label>
+    )
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={image.url}
+      alt={image.alt ?? ''}
+      className={imgClassName}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      style={pos ? { objectPosition: pos } : undefined}
+    />
   )
 }
+
+/**
+ * Zona seleccionable genérica (enlaces de redes, datos de un producto…):
+ * en /admin un clic abre sus controles en el sidebar. En el sitio no existe.
+ */
+export { SelectArea } from './SelectArea'

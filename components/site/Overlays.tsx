@@ -1,8 +1,8 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 
-import type { SiteData } from '@/lib/types'
+import { normalizeChatNotifications, type SiteSettings } from '@/lib/types'
 
 import { money, useStore, type CartItem } from './Store'
 
@@ -48,7 +48,7 @@ export function CartList({ items }: { items: CartItem[] }) {
 }
 
 /** Resumen + pedido por WhatsApp (la tienda no cobra en línea: se coordina por chat). */
-export function CartSummary({ site }: { site: SiteData }) {
+export function CartSummary({ site }: { site: SiteSettings }) {
   const { items, subtotal, clear, toast } = useStore()
   const shipping = items.length && subtotal < site.freeShippingFrom ? site.shippingCost : 0
   const total = subtotal + shipping
@@ -105,7 +105,7 @@ export function CartSummary({ site }: { site: SiteData }) {
   )
 }
 
-export function CartDrawer({ site }: { site: SiteData }) {
+export function CartDrawer({ site }: { site: SiteSettings }) {
   const { items, count, drawerOpen, setDrawerOpen } = useStore()
 
   useEffect(() => {
@@ -170,38 +170,41 @@ export function CartDrawer({ site }: { site: SiteData }) {
 
 type Msg = { from: 'me' | 'bot'; text: string }
 
-export function Floating({ site }: { site: SiteData }) {
+export function Floating({ site, chatEnabled }: { site: SiteSettings; chatEnabled: boolean }) {
   const [bubble, setBubble] = useState('')
   const [dot, setDot] = useState(false)
   const [open, setOpen] = useState(false)
-  const [msgs, setMsgs] = useState<Msg[]>([{ from: 'bot', text: '¡Hola! Soy el asistente de LAMS. ¿Te ayudo con tallas, envíos o colores?' }])
+  const [msgs, setMsgs] = useState<Msg[]>([{ from: 'bot', text: site.chatWelcome || '¡Hola! ¿En qué te ayudo?' }])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const session = useRef('')
   const list = useRef<HTMLDivElement>(null)
 
+  // Avisos del botón de WhatsApp: solo los activos, uno por uno. El tiempo
+  // visible lo decide el cliente en Configuración (whatsappIntervalSec).
+  const bubbles = useMemo(
+    () => normalizeChatNotifications(site.whatsappNotifications).filter((n) => n.enabled && n.text.trim()).map((n) => n.text),
+    [site.whatsappNotifications]
+  )
+  const visibleMs = Math.min(35, Math.max(2, site.whatsappIntervalSec ?? 7)) * 1000
+
   useEffect(() => {
-    const bubbles = site.whatsappBubbles
-    if (!bubbles.length) return
+    if (!site.whatsappEnabled || !bubbles.length) return
     let i = 0
-    let hide: ReturnType<typeof setTimeout>
-    const waits = [10000, 16000, 24000]
     let t: ReturnType<typeof setTimeout>
-    const next = () => {
-      t = setTimeout(() => {
-        setBubble(bubbles[i % bubbles.length])
-        setDot(true)
-        hide = setTimeout(() => setBubble(''), 6500)
-        i++
-        next()
-      }, waits[i % waits.length])
+    const show = () => {
+      setBubble(bubbles[i % bubbles.length])
+      setDot(true)
+      i++
+      t = setTimeout(hide, visibleMs)
     }
-    next()
-    return () => {
-      clearTimeout(t)
-      clearTimeout(hide)
+    const hide = () => {
+      setBubble('')
+      if (bubbles.length > 1 || i < 1) t = setTimeout(show, 4000)
     }
-  }, [site.whatsappBubbles])
+    t = setTimeout(show, 6000)
+    return () => clearTimeout(t)
+  }, [bubbles, visibleMs, site.whatsappEnabled])
 
   useEffect(() => {
     if (list.current) list.current.scrollTop = list.current.scrollHeight
@@ -232,6 +235,7 @@ export function Floating({ site }: { site: SiteData }) {
 
   return (
     <div className="pointer-events-none fixed right-5 bottom-5 z-[120] flex flex-col items-end gap-3 sm:right-6 sm:bottom-6">
+      {site.whatsappEnabled && (
       <a
         href={site.whatsappLink}
         target="_blank"
@@ -242,7 +246,9 @@ export function Floating({ site }: { site: SiteData }) {
       >
         {bubble || ' '}
       </a>
+      )}
 
+      {chatEnabled && (
       <div
         className={`pointer-events-auto flex max-h-[min(460px,70vh)] w-[min(320px,calc(100vw-40px))] origin-bottom-right flex-col overflow-hidden rounded-xl border border-line bg-ink-2 shadow-[0_18px_50px_-12px_rgba(0,0,0,.6)] transition-all duration-500 ease-(--ease-out-soft) ${
           open ? 'scale-100 opacity-100' : 'pointer-events-none absolute bottom-0 scale-90 opacity-0'
@@ -252,7 +258,7 @@ export function Floating({ site }: { site: SiteData }) {
       >
         <div className="flex items-center justify-between border-b border-fog/10 px-4 py-3.5">
           <span className="flex items-center gap-2 text-[13px] font-semibold text-snow">
-            <span className="h-2 w-2 rounded-full bg-[#3fd07e]" /> Asistente LAMS
+            <span className="h-2 w-2 rounded-full bg-[#3fd07e]" /> {site.chatTitle || 'Asistente'}
           </span>
           <button type="button" onClick={() => setOpen(false)} className="text-lg leading-none text-mute hover:text-fog" aria-label="Cerrar asistente">
             ×
@@ -279,7 +285,7 @@ export function Floating({ site }: { site: SiteData }) {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Escribe tu mensaje…"
+            placeholder={site.chatPlaceholder || 'Escribe tu mensaje…'}
             aria-label="Mensaje"
             className="min-w-0 flex-1 bg-transparent px-3.5 py-3 text-[13px] text-fog outline-none"
           />
@@ -288,8 +294,10 @@ export function Floating({ site }: { site: SiteData }) {
           </button>
         </form>
       </div>
+      )}
 
       <div className="flex flex-col gap-3">
+        {site.whatsappEnabled && (
         <a
           href={site.whatsappLink}
           target="_blank"
@@ -307,6 +315,8 @@ export function Floating({ site }: { site: SiteData }) {
             <path d="M21.6 18c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-1.7-.8-2.8-1.5-3.9-3.4-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7 2 .8 2.7.9 3.7.8.6-.1 1.8-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z" />
           </svg>
         </a>
+        )}
+        {chatEnabled && (
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
@@ -317,6 +327,7 @@ export function Floating({ site }: { site: SiteData }) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/asistente.webp" alt="" className="h-full w-full animate-pulse-soft object-contain" />
         </button>
+        )}
       </div>
     </div>
   )
@@ -344,7 +355,7 @@ export function Cookies() {
   }
   return (
     <div
-      className={`fixed bottom-5 left-5 z-[110] w-[min(420px,calc(100vw-110px))] rounded-[10px] border border-line bg-[#0f0f12]/95 p-5 shadow-[0_18px_44px_rgba(0,0,0,.55)] backdrop-blur transition-all duration-700 ease-(--ease-out-soft) max-sm:w-[calc(100vw-100px)] ${
+      className={`fixed bottom-5 left-5 z-[110] w-[min(420px,calc(100vw-110px))] rounded-[10px] border border-line bg-[#0f0f12]/95 p-5 shadow-[0_18px_44px_rgba(0,0,0,.55)] backdrop-blur transition-all duration-700 ease-(--ease-out-soft) @max-2xl:w-[calc(100cqw-100px)] ${
         show ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-8 opacity-0'
       }`}
     >

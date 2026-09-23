@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 
-import { Txt, useEdit } from '@/components/editable/Editable'
+import { TextStylesScope, Txt, useEditMode } from '@/components/editable/Editable'
 import type { MarqueeData } from '@/lib/types'
 
 import { useStore } from './Store'
@@ -16,7 +16,7 @@ const LINKS = [
 
 export function Nav({ brand, marquee, onMarquee }: { brand: string; marquee: MarqueeData; onMarquee?: (d: MarqueeData) => void }) {
   const { count, setDrawerOpen, bumpKey } = useStore()
-  const { edit } = useEdit()
+  const edit = useEditMode()
   const [hidden, setHidden] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [menu, setMenu] = useState(false)
@@ -44,21 +44,21 @@ export function Nav({ brand, marquee, onMarquee }: { brand: string; marquee: Mar
   const items = [...marquee.items, ...marquee.items]
 
   return (
-    <>
+    <TextStylesScope styles={marquee} patch={onMarquee && ((st) => onMarquee({ ...marquee, ...st }))}>
       <header
-        className={`fixed inset-x-0 z-[100] transition-transform duration-500 ease-(--ease-out-soft) ${edit ? 'top-12' : 'top-0'} ${
+        className={`${edit ? 'sticky top-0 -mb-[98px]' : 'fixed inset-x-0 top-0'} z-[100] transition-transform duration-500 ease-(--ease-out-soft) ${
           hidden && !menu ? '-translate-y-full' : 'translate-y-0'
         }`}
       >
         <nav
-          className={`relative flex h-16 items-center justify-between gap-3 px-[clamp(16px,4vw,56px)] backdrop-blur-xl transition-colors duration-300 ${
+          className={`relative flex h-16 items-center justify-between gap-3 px-[clamp(16px,4cqw,56px)] backdrop-blur-xl transition-colors duration-300 ${
             scrolled ? 'bg-ink/85 border-b border-line' : 'bg-ink/40 border-b border-transparent'
           }`}
         >
           <a href="#top" className="font-sans text-sm font-medium tracking-[.42em] text-snow no-underline">
             {brand}
           </a>
-          <ul className="hidden items-center gap-9 md:flex">
+          <ul className="hidden items-center gap-9 @3xl:flex">
             {LINKS.map((l) => (
               <li key={l.href}>
                 <a
@@ -83,7 +83,7 @@ export function Nav({ brand, marquee, onMarquee }: { brand: string; marquee: Mar
                 <circle cx="9" cy="20" r="1" />
                 <circle cx="17" cy="20" r="1" />
               </svg>
-              <span className="hidden sm:inline">Carrito</span>
+              <span className="hidden @2xl:inline">Carrito</span>
               <span
                 key={bumpKey}
                 className={`grid h-5 min-w-5 place-items-center rounded-full px-1 text-[10px] ${count ? 'bg-violet text-ink' : 'bg-fog/10 text-mute'} ${bumpKey ? 'animate-bump' : ''}`}
@@ -93,7 +93,7 @@ export function Nav({ brand, marquee, onMarquee }: { brand: string; marquee: Mar
             </button>
             <button
               type="button"
-              className="grid h-10 w-10 place-items-center rounded-full border border-fog/20 md:hidden"
+              className="grid h-10 w-10 place-items-center rounded-full border border-fog/20 @3xl:hidden"
               aria-label={menu ? 'Cerrar menú' : 'Abrir menú'}
               aria-expanded={menu}
               onClick={() => setMenu((m) => !m)}
@@ -108,14 +108,16 @@ export function Nav({ brand, marquee, onMarquee }: { brand: string; marquee: Mar
         </nav>
 
         <div className="flex h-[34px] items-center overflow-hidden border-b border-fog/[.08] bg-ink/65 backdrop-blur-md">
-          <div className="flex animate-marquee gap-14 font-mono text-[11px] tracking-[.22em] whitespace-nowrap text-mute uppercase hover:[animation-play-state:paused]">
+          <div className={`flex animate-marquee gap-14 font-mono text-[11px] tracking-[.22em] whitespace-nowrap text-mute uppercase hover:[animation-play-state:paused] ${edit ? '[animation-play-state:paused]' : ''}`}>
             {items.map((t, i) => (
               <span key={i} className="inline-flex items-center gap-2">
                 <i className="text-violet not-italic">◆</i>
                 {i < marquee.items.length && onMarquee ? (
                   <Txt
+                    k={`items.${i}`}
+                    label={`Cinta — mensaje ${i + 1}`}
                     value={t}
-                    onChange={(v) => onMarquee({ items: marquee.items.map((x, j) => (j === i ? v : x)) })}
+                    onChange={(v) => onMarquee({ ...marquee, items: marquee.items.map((x, j) => (j === i ? v : x)) })}
                   />
                 ) : (
                   t
@@ -128,7 +130,7 @@ export function Nav({ brand, marquee, onMarquee }: { brand: string; marquee: Mar
 
       {/* Menú móvil a pantalla completa */}
       <div
-        className={`fixed inset-0 z-[99] flex flex-col justify-end bg-ink/95 px-6 pb-16 backdrop-blur-xl transition-[opacity,visibility] duration-500 md:hidden ${
+        className={`fixed inset-0 z-[99] flex flex-col justify-end bg-ink/95 px-6 pb-16 backdrop-blur-xl transition-[opacity,visibility] duration-500 @3xl:hidden ${
           menu ? 'visible opacity-100' : 'invisible opacity-0'
         }`}
       >
@@ -138,7 +140,7 @@ export function Nav({ brand, marquee, onMarquee }: { brand: string; marquee: Mar
               <a
                 href={l.href}
                 onClick={() => setMenu(false)}
-                className={`block text-[clamp(40px,12vw,64px)] leading-none font-medium tracking-[-.04em] text-snow no-underline transition-transform duration-700 ease-(--ease-out-soft) ${
+                className={`block text-[clamp(40px,12cqw,64px)] leading-none font-medium tracking-[-.04em] text-snow no-underline transition-transform duration-700 ease-(--ease-out-soft) ${
                   menu ? 'translate-y-0' : 'translate-y-full'
                 }`}
                 style={{ transitionDelay: menu ? `${80 + i * 70}ms` : '0ms' }}
@@ -150,6 +152,6 @@ export function Nav({ brand, marquee, onMarquee }: { brand: string; marquee: Mar
         </ul>
         <p className="mt-10 font-mono text-[11px] tracking-[.22em] text-mute uppercase">{brand} · Otoño 2026</p>
       </div>
-    </>
+    </TextStylesScope>
   )
 }

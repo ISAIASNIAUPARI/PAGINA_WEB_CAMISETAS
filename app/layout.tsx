@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Instrument_Serif, JetBrains_Mono, Space_Grotesk } from 'next/font/google'
 
+import theme from '@/content/theme.json'
+
 import './globals.css'
 
 const grotesk = Space_Grotesk({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-grotesk' })
@@ -20,7 +22,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className={`${grotesk.variable} ${instrument.variable} ${jetbrains.variable}`} suppressHydrationWarning>
+    <html
+      lang="es"
+      className={`${grotesk.variable} ${instrument.variable} ${jetbrains.variable}`}
+      style={{ '--color-primary': theme.colorPrimary, '--color-secondary': theme.colorSecondary, '--color-accent': theme.colorAccent } as React.CSSProperties}
+      suppressHydrationWarning
+    >
       <head>
         <link rel="preconnect" href="https://res.cloudinary.com" crossOrigin="" />
         <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />

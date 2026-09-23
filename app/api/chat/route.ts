@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server'
 
-// URL del agente n8n: se lee de la variable N8N_WEBHOOK_URL en Vercel; el valor
-// por defecto es el webhook que ya usaba el diseño original.
-const DEFAULT_WEBHOOK =
-  'https://n8n-n8n.kwtwgj.easypanel.host/webhook/arte-creativo-completo?key=714a2572a710151d07155979eaa4676a7f1f4f99ab6474fb'
+import siteSettings from '@/content/siteSettings.json'
 
 /**
  * Proxy del chat: el visitante habla con ESTA ruta, y el servidor reenvía el
@@ -13,14 +10,18 @@ const DEFAULT_WEBHOOK =
  * un dato de configuración del cliente y no debe aparecer en el HTML ni en el
  * JS que se descarga en el sitio público (tampoco en una variable
  * NEXT_PUBLIC_). Con este paso intermedio el navegador solo conoce /api/chat;
- * la URL real vive solo en el servidor.
+ * la URL real se lee de content/siteSettings.json en el servidor (se edita desde
+ * /admin → Configuración) y nunca se envía al navegador del visitante.
  *
  * Es una ruta PÚBLICA a propósito — la usa cualquier visitante del sitio, no
  * el panel de administración (por eso vive fuera de /api/admin, que el
  * middleware protege con sesión).
  */
 export async function POST(req: Request) {
-  const webhook = (process.env.N8N_WEBHOOK_URL || DEFAULT_WEBHOOK).trim()
+  if (!siteSettings.chatButtonEnabled) {
+    return NextResponse.json({ ok: false, error: 'El chat está desactivado.' }, { status: 503 })
+  }
+  const webhook = (siteSettings.chatWebhookUrl || process.env.N8N_WEBHOOK_URL || '').trim()
   if (!webhook) {
     return NextResponse.json({ ok: false, error: 'El chat no está configurado.' }, { status: 503 })
   }

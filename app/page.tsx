@@ -1,6 +1,10 @@
 import { Site } from '@/components/site/Site'
-import { getContent } from '@/lib/content'
+import { getContent, getDynamicSections } from '@/lib/content'
 
 export default function Home() {
-  return <Site content={getContent()} />
+  const content = getContent()
+  const { chatWebhookUrl, ...siteSettings } = content.siteSettings
+  // La URL del agente se queda en el servidor: el navegador solo sabe si el chat existe.
+  const chatEnabled = content.siteSettings.chatButtonEnabled && Boolean(chatWebhookUrl?.trim())
+  return <Site content={{ ...content, siteSettings: { ...siteSettings, chatWebhookUrl: '' } }} dynamic={getDynamicSections()} chatEnabled={chatEnabled} />
 }

@@ -2,9 +2,25 @@
   "eyebrow": "Lo que dicen",
   "title": "Clientes reales.",
   "items": [
-    { "name": "Mariana G.", "text": "La tela es súper suave y el corte queda perfecto. El envío llegó en solo dos días. Repetiré seguro." },
-    { "name": "Carlos M.", "text": "Me daba miedo fallar con la talla, pero la guía es exacta. La camiseta es de gran calidad." },
-    { "name": "Valentina S.", "text": "El diseño es idéntico a las fotos. Me encanta el estilo único que tiene la marca." },
-    { "name": "Andrés P.", "text": "Compré tres colores distintos, todos con el mismo corte perfecto. Ya es mi marca de confianza." }
+    {
+      "name": "Mariana G.",
+      "text": "La tela es súper suave y el corte queda perfecto. El envío llegó en solo dos días. Repetiré seguro.",
+      "id": "t-1"
+    },
+    {
+      "name": "Carlos M.",
+      "text": "Me daba miedo fallar con la talla, pero la guía es exacta. La camiseta es de gran calidad.",
+      "id": "t-2"
+    },
+    {
+      "name": "Valentina S.",
+      "text": "El diseño es idéntico a las fotos. Me encanta el estilo único que tiene la marca.",
+      "id": "t-3"
+    },
+    {
+      "name": "Andrés P.",
+      "text": "Compré tres colores distintos, todos con el mismo corte perfecto. Ya es mi marca de confianza.",
+      "id": "t-4"
+    }
   ]
 }

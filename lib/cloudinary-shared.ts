@@ -12,9 +12,10 @@ export const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/quicktime', 'video/webm'
 
 export const MAX_IMAGE_BYTES = 10 * 1024 * 1024
 export const MAX_VIDEO_BYTES = 200 * 1024 * 1024
-// Límite real de esta cuenta de Cloudinary para resource_type "raw" (donde
-// viven los .glb) — ver error #7/#8 del cerebro.
-export const MAX_MODEL_BYTES = 10 * 1024 * 1024
+// Tope del panel para modelos .glb (pedido del cliente: hasta 40MB). Si el plan
+// de Cloudinary tiene un límite menor para "raw", el mensaje exacto de
+// Cloudinary se muestra en el panel (ver error #7/#8 del cerebro).
+export const MAX_MODEL_BYTES = 40 * 1024 * 1024
 
 export function resourceTypeFor(kind: ResourceKind): 'image' | 'video' | 'raw' {
   if (kind === 'model') return 'raw'

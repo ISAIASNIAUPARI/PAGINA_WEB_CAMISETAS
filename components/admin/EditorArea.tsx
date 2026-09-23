@@ -1,0 +1,42 @@
+'use client'
+
+import { PreviewReadOnly, useSelection } from './Selection'
+import { Sidebar } from './Sidebar'
+import { PreviewViewMode } from './useIsMobileView'
+
+/**
+ * Cuerpo del editor (Fase E): sidebar del elemento seleccionado + preview en
+ * solo lectura. Lo usan TODAS las rutas del admin — la principal y las que
+ * editan una página suelta, como /admin/bebidas.
+ *
+ * Vive aparte justamente para eso: cuando se añadió el sidebar solo se cableó
+ * la ruta principal, y /admin/bebidas se quedó sin <SelectionProvider>. Como
+ * en Fase E el texto ya no es contentEditable, ahí dejó de poder editarse
+ * NADA. Teniendo una sola pieza compartida, una ruta nueva no puede quedarse
+ * a medias.
+ */
+export function EditorArea({ mobileFrame, children }: { mobileFrame?: boolean; children: React.ReactNode }) {
+  const { selected, clear } = useSelection()
+
+  return (
+    // El marco 🖥️/📱 de acá es lo que leen los textos para decidir qué
+    // tamaño aplicar (ver useIsMobileView): así el sidebar y el preview
+    // hablan SIEMPRE de la misma vista, monte o no un EditProvider la ruta.
+    <PreviewViewMode mobile={mobileFrame}>
+    <div className={`admin-shell-grid ${selected ? 'admin-shell-grid--with-sidebar' : ''}`}>
+      <Sidebar mobileView={mobileFrame} />
+      <div className="admin-preview" onClick={() => clear()}>
+        <PreviewReadOnly>
+          {mobileFrame ? (
+            <div className="flex justify-center bg-admin-line py-6">
+              <div className="admin-mobile-frame">{children}</div>
+            </div>
+          ) : (
+            children
+          )}
+        </PreviewReadOnly>
+      </div>
+    </div>
+    </PreviewViewMode>
+  )
+}

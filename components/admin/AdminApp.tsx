@@ -1,112 +1,62 @@
 'use client'
 
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React from 'react'
 
-import { EditContext } from '@/components/editable/Editable'
-import { Site } from '@/components/site/Site'
-import type { Content, SectionId } from '@/lib/types'
-import { uploadDirectToCloudinary } from '@/lib/upload-direct'
+import { Site, type DynamicData } from '@/components/site/Site'
+import type { Content } from '@/lib/types'
 
-/** Comprime en el navegador antes de subir (máx 1600px, WebP 0.82) — error #7 del protocolo. */
-async function compressImage(file: File, maxW = 1600): Promise<File> {
-  const bmp = await createImageBitmap(file)
-  const scale = Math.min(1, maxW / bmp.width)
-  const canvas = document.createElement('canvas')
-  canvas.width = Math.round(bmp.width * scale)
-  canvas.height = Math.round(bmp.height * scale)
-  canvas.getContext('2d')?.drawImage(bmp, 0, 0, canvas.width, canvas.height)
-  const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, 'image/webp', 0.82))
-  if (!blob) return file
-  return new File([blob], file.name.replace(/\.\w+$/, '') + '.webp', { type: 'image/webp' })
+import { useEdit } from './EditProvider'
+import { EditorArea } from './EditorArea'
+import { SelectionProvider } from './Selection'
+import { Toolbar } from './Toolbar'
+
+function PositionBadge({ n }: { n: number }) {
+  return (
+    <span className="pointer-events-none absolute top-2 left-2 z-[60] flex h-6 w-6 items-center justify-center rounded-full bg-black/70 text-xs font-medium text-white">
+      {n}
+    </span>
+  )
 }
 
-async function uploadImage(file: File) {
-  const small = await compressImage(file)
-  const form = new FormData()
-  form.append('file', small)
-  const res = await fetch('/api/admin/upload-image', { method: 'POST', body: form })
-  const json = (await res.json().catch(() => ({}))) as { ok?: boolean; url?: string; error?: string }
-  if (!res.ok || !json.ok || !json.url) throw new Error(json.error || 'No se pudo subir la imagen.')
-  return json.url
-}
+/**
+ * El sitio real montado en modo edición: mismo árbol de componentes que la
+ * web pública, con el orden/visibilidad de "Organizar página" y las secciones
+ * creadas desde plantilla.
+ */
+export function AdminApp() {
+  const { data, update, layout, viewMode } = useEdit()
 
-type Status = { kind: 'idle' | 'saving' | 'ok' | 'error'; msg?: string }
-
-export function AdminApp({ initial }: { initial: Content }) {
-  const [content, setContent] = useState<Content>(initial)
-  const [dirty, setDirty] = useState<Set<SectionId>>(new Set())
-  const [status, setStatus] = useState<Status>({ kind: 'idle' })
-
-  const onChange = useCallback(<K extends SectionId>(id: K, data: Content[K]) => {
-    setContent((c) => ({ ...c, [id]: data }))
-    setDirty((d) => new Set(d).add(id))
-    setStatus({ kind: 'idle' })
-  }, [])
-
-  useEffect(() => {
-    const warn = (e: BeforeUnloadEvent) => {
-      if (dirty.size) e.preventDefault()
-    }
-    window.addEventListener('beforeunload', warn)
-    return () => window.removeEventListener('beforeunload', warn)
-  }, [dirty])
-
-  const save = async () => {
-    if (!dirty.size) return
-    setStatus({ kind: 'saving' })
-    try {
-      const res = await fetch('/api/admin/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sections: [...dirty].map((id) => ({ sectionId: id, data: content[id] })) }),
-      })
-      const json = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string }
-      if (!res.ok || !json.ok) throw new Error(json.error || 'No se pudo guardar.')
-      setDirty(new Set())
-      setStatus({ kind: 'ok', msg: 'Guardado. La web se actualiza en ~1 minuto.' })
-    } catch (e) {
-      setStatus({ kind: 'error', msg: e instanceof Error ? e.message : 'Error al guardar.' })
-    }
+  const content = { ...(data as unknown as Content), pageLayout: layout }
+  const dynamic: DynamicData = {}
+  for (const s of layout.sections) {
+    if (s.type && data[s.id] !== undefined) dynamic[s.id] = { type: s.type, data: data[s.id] }
   }
 
-  const api = useMemo(
-    () => ({
-      edit: true,
-      uploadImage,
-      uploadVideo: (file: File, onProgress: (p: number) => void) => uploadDirectToCloudinary(file, 'video', onProgress),
-    }),
-    []
-  )
-
-  let statusNode: React.ReactNode = dirty.size ? `${dirty.size} ${dirty.size === 1 ? 'sección cambiada' : 'secciones cambiadas'}` : 'Sin cambios'
-  if (status.kind === 'saving') statusNode = 'Guardando…'
-  if (status.kind === 'error') statusNode = <span className="text-[#ff8a8a]">{status.msg}</span>
-  if (status.kind === 'ok') statusNode = <span className="text-[#6fe0a0]">{status.msg}</span>
-
   return (
-    <EditContext.Provider value={api}>
-      <div className="fixed inset-x-0 top-0 z-[400] flex h-12 items-center gap-3 border-b border-violet/40 bg-[#120818] px-4 text-[12px] text-fog">
-        <span className="font-mono tracking-[.2em] text-lilac uppercase">Admin</span>
-        <span className="hidden text-mute lg:inline">Clic en un texto para editarlo · &quot;Cambiar imagen/video&quot; sobre cada medio</span>
-        <span className="ml-auto truncate text-mute">{statusNode}</span>
-        <button
-          type="button"
-          onClick={save}
-          disabled={!dirty.size || status.kind === 'saving'}
-          className="rounded bg-violet px-4 py-1.5 font-mono text-[11px] tracking-[.12em] text-ink uppercase disabled:opacity-40"
-        >
-          Guardar
-        </button>
-        <a href="/" target="_blank" className="hidden text-mute underline sm:inline">
-          Ver web
-        </a>
-        <a href="/api/admin/logout" className="text-mute underline">
-          Salir
-        </a>
+    <SelectionProvider>
+      <div className="admin-editor-root">
+        <Toolbar />
+        <EditorArea mobileFrame={viewMode === 'mobile'}>
+          <Site
+            content={content}
+            dynamic={dynamic}
+            chatEnabled={false}
+            onChange={(id, next) => update(id, next)}
+            renderWrapper={(id, i, node) => {
+              const entry = layout.sections.find((s) => s.id === id)
+              return (
+                <div className={`relative ${entry?.visible ? '' : 'opacity-60'}`}>
+                  <PositionBadge n={i + 1} />
+                  {!entry?.visible && (
+                    <div className="relative z-20 bg-yellow-100 px-4 py-1 text-center text-xs text-yellow-800">Sección oculta — no se muestra en el sitio público</div>
+                  )}
+                  {node}
+                </div>
+              )
+            }}
+          />
+        </EditorArea>
       </div>
-      <div className="pt-12">
-        <Site content={content} onChange={onChange} />
-      </div>
-    </EditContext.Provider>
+    </SelectionProvider>
   )
 }

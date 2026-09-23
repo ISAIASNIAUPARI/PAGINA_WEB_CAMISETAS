@@ -3,8 +3,23 @@
   "titleEm": "pensar.",
   "body": "Diseñamos para la realidad de cada mañana. Piezas que se combinan solas, que no piden atención, que simplemente funcionan cuando las necesitas.",
   "values": [
-    { "n": "01", "name": "Algodón de primera", "desc": "Seleccionamos exclusivamente algodón peinado de fibra larga. Más suave al tacto, más resistente al lavado, más vivo en el color después de cien usos." },
-    { "n": "02", "name": "Paleta atemporal", "desc": "Cuatro colores elegidos para coexistir. Blanco cálido, azul marino profundo, verde de tierra y terracota suave. Todo combina con todo, sin esfuerzo." },
-    { "n": "03", "name": "Corte que dura", "desc": "Ni oversized de temporada, ni slim del año pasado. Un patrón estudiado para mantenerse bien lavado tras lavado, año tras año, sin concesiones." }
+    {
+      "n": "01",
+      "name": "Algodón de primera",
+      "desc": "Seleccionamos exclusivamente algodón peinado de fibra larga. Más suave al tacto, más resistente al lavado, más vivo en el color después de cien usos.",
+      "id": "val-01"
+    },
+    {
+      "n": "02",
+      "name": "Paleta atemporal",
+      "desc": "Cuatro colores elegidos para coexistir. Blanco cálido, azul marino profundo, verde de tierra y terracota suave. Todo combina con todo, sin esfuerzo.",
+      "id": "val-02"
+    },
+    {
+      "n": "03",
+      "name": "Corte que dura",
+      "desc": "Ni oversized de temporada, ni slim del año pasado. Un patrón estudiado para mantenerse bien lavado tras lavado, año tras año, sin concesiones.",
+      "id": "val-03"
+    }
   ]
 }

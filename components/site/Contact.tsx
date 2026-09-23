@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react'
 
-import { AdminField, Txt, useEdit } from '@/components/editable/Editable'
+import { SelectArea, TextStylesScope, Txt, useEditMode } from '@/components/editable/Editable'
+import { SideField } from '@/components/editable/SelectArea'
 import type { ContactData, FooterData } from '@/lib/types'
 
 import { useStore } from './Store'
@@ -17,7 +18,7 @@ const ICONS: Record<string, React.ReactNode> = {
 export function Contact({ data, whatsappLink, onChange }: { data: ContactData; whatsappLink: string; onChange?: (d: ContactData) => void }) {
   const set = onChange ? (patch: Partial<ContactData>) => onChange({ ...data, ...patch }) : undefined
   const { toast } = useStore()
-  const { edit } = useEdit()
+  const edit = useEditMode()
   const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
 
   const rows: { icon: string; label: string; key: keyof ContactData }[] = [
@@ -52,22 +53,23 @@ export function Contact({ data, whatsappLink, onChange }: { data: ContactData; w
   )
 
   return (
+    <TextStylesScope styles={data} patch={set && ((st) => set(st))}>
     <section
       id="contacto"
-      className="scroll-mt-24 px-[clamp(20px,5vw,80px)] py-[clamp(64px,10vw,110px)] [background:radial-gradient(900px_600px_at_90%_0%,rgba(45,10,58,.28),transparent_60%),radial-gradient(800px_500px_at_0%_70%,rgba(75,19,102,.2),transparent_60%),#050505]"
+      className="scroll-mt-24 px-[clamp(20px,5cqw,80px)] py-[clamp(64px,10cqw,110px)] [background:radial-gradient(900px_600px_at_90%_0%,rgba(45,10,58,.28),transparent_60%),radial-gradient(800px_500px_at_0%_70%,rgba(75,19,102,.2),transparent_60%),#050505]"
     >
       <div className="mx-auto max-w-[1100px]">
         <div className="mb-14 text-center">
           <p data-reveal className="mb-4 font-mono text-[11px] tracking-[.22em] text-mute uppercase">
-            <Txt value={data.eyebrow} onChange={set && ((v) => set({ eyebrow: v }))} />
+            <Txt k="eyebrow" label="Antetítulo" value={data.eyebrow} onChange={set && ((v) => set({ eyebrow: v }))} />
           </p>
-          <h2 className="mb-5 text-[clamp(36px,5vw,64px)] leading-[.94] font-medium tracking-[-.04em] text-snow">
-            <Txt value={data.title} onChange={set && ((v) => set({ title: v }))} split />
+          <h2 className="mb-5 text-[clamp(36px,5cqw,64px)] leading-[.94] font-medium tracking-[-.04em] text-snow">
+            <Txt k="title" label="Título" value={data.title} onChange={set && ((v) => set({ title: v }))} split />
           </h2>
-          <Txt as="p" multiline className="mx-auto max-w-[520px] text-base leading-[1.7] text-mute" value={data.body} onChange={set && ((v) => set({ body: v }))} />
+          <Txt k="body" label="Texto" as="p" className="mx-auto max-w-[520px] text-base leading-[1.7] text-mute" value={data.body} onChange={set && ((v) => set({ body: v }))} />
         </div>
 
-        <div data-reveal className="grid overflow-hidden rounded-md border border-line bg-ink-3 md:grid-cols-2">
+        <div data-reveal className="grid overflow-hidden rounded-md border border-line bg-ink-3 @3xl:grid-cols-2">
           <form
             onSubmit={(e) => {
               e.preventDefault()
@@ -77,7 +79,7 @@ export function Contact({ data, whatsappLink, onChange }: { data: ContactData; w
               toast('Mensaje copiado · pégalo en WhatsApp')
               window.open(whatsappLink, '_blank', 'noopener')
             }}
-            className="flex flex-col gap-5 border-b border-line p-[clamp(24px,4vw,48px)] md:border-r md:border-b-0"
+            className="flex flex-col gap-5 border-b border-line p-[clamp(24px,4cqw,48px)] @3xl:border-r @3xl:border-b-0"
           >
             {field('name', 'Nombre completo', 'text', 'Juan Pérez', true)}
             {field('email', 'Correo electrónico', 'email', 'juan@email.com', true)}
@@ -94,7 +96,7 @@ export function Contact({ data, whatsappLink, onChange }: { data: ContactData; w
             <span className="text-xs text-mute">Tu mensaje se copia y se abre WhatsApp para enviarlo.</span>
           </form>
 
-          <div className="bg-[#0B0B0B] p-[clamp(24px,4vw,48px)]">
+          <div className="bg-[#0B0B0B] p-[clamp(24px,4cqw,48px)]">
             <h3 className="mb-7 text-2xl font-semibold text-[#EDEBF0]">Información de contacto</h3>
             <div className="flex flex-col gap-6">
               {rows.map((r) => (
@@ -106,16 +108,17 @@ export function Contact({ data, whatsappLink, onChange }: { data: ContactData; w
                   </span>
                   <div>
                     <div className="mb-1 text-sm font-medium text-fog">{r.label}</div>
-                    <Txt as="div" className="text-sm leading-[1.6] text-mute" value={data[r.key]} onChange={set && ((v) => set({ [r.key]: v } as Partial<ContactData>))} />
+                    <Txt k={r.key} label={r.label} as="div" className="text-sm leading-[1.6] text-mute" value={data[r.key] as string} onChange={set && ((v) => set({ [r.key]: v } as Partial<ContactData>))} />
                   </div>
                 </div>
               ))}
             </div>
-            {set && (
-              <div className="mt-4">
-                <AdminField label="Dirección del mapa" value={data.mapQuery} onChange={(v) => set({ mapQuery: v })} />
-              </div>
-            )}
+            <SelectArea
+              label="Mapa"
+              controls={() => (
+                <SideField label="Dirección que muestra el mapa" value={data.mapQuery} onChange={(v) => set?.({ mapQuery: v })} hint="Escríbela como la buscarías en Google Maps." />
+              )}
+            >
             <div className="mt-7 aspect-video overflow-hidden rounded border border-line">
               <iframe
                 title="Mapa de ubicación"
@@ -123,12 +126,15 @@ export function Contact({ data, whatsappLink, onChange }: { data: ContactData; w
                 className="h-full w-full border-0 grayscale-[.85] invert-[.9] hue-rotate-180 transition-[filter] duration-700 hover:filter-none"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
+                style={edit ? { pointerEvents: 'none' } : undefined}
               />
             </div>
+            </SelectArea>
           </div>
         </div>
       </div>
     </section>
+    </TextStylesScope>
   )
 }
 
@@ -140,11 +146,12 @@ export function Footer({ brand, data, social, onChange }: { brand: string; data:
     { t: 'Clientes', l: [['Contacto', '#contacto'], ['Carrito', '/carrito'], ['Privacidad', '/privacidad']] },
   ]
   return (
-    <footer className="relative overflow-hidden bg-ink px-[clamp(20px,5vw,80px)] pt-[72px]">
-      <div className="grid gap-10 pb-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <TextStylesScope styles={data} patch={set && ((st) => set(st))}>
+    <footer className="relative overflow-hidden bg-ink px-[clamp(20px,5cqw,80px)] pt-[72px]">
+      <div className="grid gap-10 pb-14 @2xl:grid-cols-2 @5xl:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <div className="mb-4 text-xl font-medium tracking-[.3em] text-snow">{brand}</div>
-          <Txt as="p" multiline className="max-w-[300px] text-sm leading-[1.7] text-fog/40" value={data.tagline} onChange={set && ((v) => set({ tagline: v }))} />
+          <Txt k="tagline" label="Descripción de la marca" as="p" className="max-w-[300px] text-sm leading-[1.7] text-fog/40" value={data.tagline} onChange={set && ((v) => set({ tagline: v }))} />
           <div className="mt-6 flex gap-3">
             {social.map((s) => (
               <a
@@ -175,15 +182,16 @@ export function Footer({ brand, data, social, onChange }: { brand: string; data:
           </div>
         ))}
       </div>
-      <div aria-hidden className="pointer-events-none text-center text-[21vw] leading-[.75] font-bold tracking-[-.07em] text-transparent select-none [-webkit-text-stroke:1px_rgba(217,217,217,.07)]">
+      <div aria-hidden className="pointer-events-none text-center text-[21cqw] leading-[.75] font-bold tracking-[-.07em] text-transparent select-none [-webkit-text-stroke:1px_rgba(217,217,217,.07)]">
         LAMS
       </div>
       <div className="flex flex-wrap items-center justify-between gap-6 border-t border-fog/[.08] py-6">
         <span className="text-[11px] tracking-[.05em] text-fog/30">© 2026 {brand} · Todos los derechos reservados</span>
         <span className="text-[11px] tracking-[.05em] text-fog/30">
-          Envíos: <Txt value={data.shippingRegion} onChange={set && ((v) => set({ shippingRegion: v }))} />
+          Envíos: <Txt k="shippingRegion" label="Región de envío" value={data.shippingRegion} onChange={set && ((v) => set({ shippingRegion: v }))} />
         </span>
       </div>
     </footer>
+    </TextStylesScope>
   )
 }

@@ -3,7 +3,9 @@
 import Script from 'next/script'
 import React, { useEffect, useRef, useState } from 'react'
 
-import { AdminField, Txt } from '@/components/editable/Editable'
+import { EditableModel } from '@/components/editable/EditableModel'
+import { SelectArea, TextStylesScope, Txt, useEditMode } from '@/components/editable/Editable'
+import { SideButton, SideField } from '@/components/editable/SelectArea'
 import type { Product3dData } from '@/lib/types'
 
 import { money, useStore } from './Store'
@@ -15,6 +17,7 @@ type MV = HTMLElement & {
 export function Product3d({ data, onChange }: { data: Product3dData; onChange?: (d: Product3dData) => void }) {
   const set = onChange ? (patch: Partial<Product3dData>) => onChange({ ...data, ...patch }) : undefined
   const { add } = useStore()
+  const edit = useEditMode()
   const [color, setColor] = useState(0)
   const [size, setSize] = useState(data.sizes.includes('M') ? 'M' : data.sizes[0])
   const [loaded, setLoaded] = useState(false)
@@ -35,12 +38,13 @@ export function Product3d({ data, onChange }: { data: Product3dData; onChange?: 
   }, [c.hex])
 
   return (
-    <section className="relative overflow-hidden bg-[#0B0B0B] px-[clamp(20px,5vw,80px)] py-[clamp(64px,10vw,120px)]">
+    <TextStylesScope styles={data} patch={set && ((st) => set(st))}>
+    <section className="relative overflow-hidden bg-[#0B0B0B] px-[clamp(20px,5cqw,80px)] py-[clamp(64px,10cqw,120px)]">
       <Script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js" strategy="lazyOnload" />
-      <div className="mx-auto grid max-w-[1100px] items-center gap-[clamp(32px,6vw,72px)] md:grid-cols-[1.1fr_1fr]">
+      <div className="mx-auto grid max-w-[1100px] items-center gap-[clamp(32px,6cqw,72px)] @3xl:grid-cols-[1.1fr_1fr]">
         <div data-reveal="scale" className="relative">
           <div
-            className="relative aspect-[3/4] max-h-[76vh] w-full overflow-hidden rounded-md border border-fog/10 transition-[background] duration-700"
+            className="group relative aspect-[3/4] max-h-[76vh] w-full overflow-hidden rounded-md border border-fog/10 transition-[background] duration-700"
             style={{ background: `radial-gradient(90% 70% at 50% 115%, ${c.hex}55 0%, transparent 60%), radial-gradient(90% 70% at 50% 115%, #3A0F4D 0%, transparent 70%), #050505` }}
           >
             {!loaded && (
@@ -71,25 +75,41 @@ export function Product3d({ data, onChange }: { data: Product3dData; onChange?: 
               'field-of-view': '32deg',
               style: { width: '100%', height: '100%', backgroundColor: 'transparent', ['--progress-bar-color' as string]: '#A76BE0' },
             })}
+            <EditableModel edit={edit} onChange={set && ((url) => set({ modelUrl: url }))} />
           </div>
         </div>
 
         <div>
           <p data-reveal className="mb-4 font-mono text-[11px] tracking-[.22em] text-mute uppercase">
-            <Txt value={data.eyebrow} onChange={set && ((v) => set({ eyebrow: v }))} />
+            <Txt k="eyebrow" label="Antetítulo" value={data.eyebrow} onChange={set && ((v) => set({ eyebrow: v }))} />
           </p>
-          <h2 className="mb-4 text-[clamp(34px,4.6vw,56px)] leading-[.95] font-medium tracking-[-.04em] text-snow">
-            <Txt value={data.title} onChange={set && ((v) => set({ title: v }))} split />
+          <h2 className="mb-4 text-[clamp(34px,4.6cqw,56px)] leading-[.95] font-medium tracking-[-.04em] text-snow">
+            <Txt k="title" label="Nombre de la pieza" value={data.title} onChange={set && ((v) => set({ title: v }))} split />
           </h2>
-          <span data-reveal className="font-mono text-2xl font-medium text-snow">
-            {money(data.price)}
-          </span>
-          {set && (
-            <div className="mt-2 flex flex-col gap-1">
-              <AdminField label="Precio" type="number" value={data.price} onChange={(v) => set({ price: Number(v) || 0 })} />
-              <AdminField label="Modelo .glb (URL)" type="url" value={data.modelUrl} onChange={(v) => set({ modelUrl: v })} />
+          <SelectArea label="Pieza 3D — precio, colores y tallas" controls={() => (
+            <div>
+              <SideField label="Precio (USD)" type="number" value={data.price} onChange={(v) => set?.({ price: Number(v) || 0 })} />
+              <span className="admin-sidebar-sublabel">Colores</span>
+              <div className="mt-1.5 mb-3 flex flex-col gap-2">
+                {data.colors.map((col, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <input type="color" value={col.hex} onChange={(e) => set?.({ colors: data.colors.map((x, j) => (j === i ? { ...x, hex: e.target.value } : x)) })} className="h-8 w-10 shrink-0 cursor-pointer rounded border border-white/20 bg-transparent" />
+                    <input value={col.name} onChange={(e) => set?.({ colors: data.colors.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)) })} className="admin-sidebar-input" />
+                    {data.colors.length > 1 && (
+                      <button type="button" onClick={() => { set?.({ colors: data.colors.filter((_, j) => j !== i) }); setColor(0) }} className="admin-sidebar-clear" title="Quitar color">×</button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <SideButton onClick={() => set?.({ colors: [...data.colors, { name: 'Nuevo color', hex: '#888888' }] })}>+ Añadir color</SideButton>
+              <SideField label="Tallas (separadas por comas)" value={data.sizes.join(', ')} onChange={(v) => set?.({ sizes: v.split(',').map((x) => x.trim()).filter(Boolean) })} />
+              <p className="text-[11px] leading-snug text-white/45">El modelo 3D se cambia haciendo clic sobre el visor (archivo .glb, máx. 40 MB).</p>
             </div>
-          )}
+          )}>
+            <span data-reveal className="font-mono text-2xl font-medium text-snow">
+              {money(data.price)}
+            </span>
+          </SelectArea>
 
           <div data-reveal style={{ ['--d' as string]: 100 }} className="mt-8">
             <span className="text-xs tracking-[.06em] text-mute uppercase">
@@ -145,10 +165,11 @@ export function Product3d({ data, onChange }: { data: Product3dData; onChange?: 
           </button>
 
           <div className="mt-7 border-t border-fog/10 pt-5 text-[13px] text-mute">
-            <Txt value={data.note} onChange={set && ((v) => set({ note: v }))} />
+            <Txt k="note" label="Nota de envío" value={data.note} onChange={set && ((v) => set({ note: v }))} />
           </div>
         </div>
       </div>
     </section>
+    </TextStylesScope>
   )
 }

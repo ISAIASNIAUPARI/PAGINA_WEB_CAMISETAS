@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-import { isSectionId, sectionFilePath } from '@/lib/content'
+import { CONTENT_FILES, isSafeSectionId, sectionFilePath } from '@/lib/content'
 import { commitFiles } from '@/lib/github'
 
 export async function POST(req: Request) {
@@ -9,9 +9,9 @@ export async function POST(req: Request) {
     const sections: { sectionId: string; data: unknown }[] = Array.isArray(body?.sections) ? body.sections : []
 
     const files = sections
-      .filter((s) => typeof s.sectionId === 'string' && isSectionId(s.sectionId))
+      .filter((s) => typeof s.sectionId === 'string' && (s.sectionId in CONTENT_FILES || isSafeSectionId(s.sectionId)))
       .map((s) => ({
-        path: sectionFilePath(s.sectionId as Parameters<typeof sectionFilePath>[0]),
+        path: sectionFilePath(s.sectionId),
         content: `${JSON.stringify(s.data, null, 2)}\n`,
         encoding: 'utf-8' as const,
       }))

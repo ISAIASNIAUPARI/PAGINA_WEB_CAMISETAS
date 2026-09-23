@@ -1,0 +1,27 @@
+{
+  "brand": "LAMS STUDIO",
+  "freeShippingFrom": 60,
+  "shippingCost": 6,
+  "whatsappEnabled": true,
+  "whatsappLink": "https://wa.link/zkm04c",
+  "whatsappNotifications": [
+    {
+      "text": "¿Buscas ayuda con tu talla?",
+      "enabled": true
+    },
+    {
+      "text": "Nuevas piezas cada temporada",
+      "enabled": true
+    },
+    {
+      "text": "Escríbenos, resolvemos rápido",
+      "enabled": true
+    }
+  ],
+  "whatsappIntervalSec": 7,
+  "chatButtonEnabled": true,
+  "chatWebhookUrl": "https://n8n-n8n.kwtwgj.easypanel.host/webhook/arte-creativo-completo?key=714a2572a710151d07155979eaa4676a7f1f4f99ab6474fb",
+  "chatTitle": "Asistente LAMS",
+  "chatWelcome": "¡Hola! Soy el asistente de LAMS. ¿Te ayudo con tallas, envíos o colores?",
+  "chatPlaceholder": "Escribe tu mensaje…"
+}

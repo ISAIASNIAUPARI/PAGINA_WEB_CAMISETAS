@@ -1,0 +1,44 @@
+{
+  "sections": [
+    {
+      "id": "hero",
+      "label": "Portada",
+      "visible": true
+    },
+    {
+      "id": "collection",
+      "label": "Colección",
+      "visible": true
+    },
+    {
+      "id": "about",
+      "label": "Nosotros",
+      "visible": true
+    },
+    {
+      "id": "product3d",
+      "label": "Camiseta 3D",
+      "visible": true
+    },
+    {
+      "id": "testimonials",
+      "label": "Testimonios",
+      "visible": true
+    },
+    {
+      "id": "social",
+      "label": "Redes y videos",
+      "visible": true
+    },
+    {
+      "id": "newsletter",
+      "label": "Comunidad (newsletter)",
+      "visible": true
+    },
+    {
+      "id": "contact",
+      "label": "Contacto",
+      "visible": true
+    }
+  ]
+}

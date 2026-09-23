@@ -2,12 +2,12 @@
 
 import React from 'react'
 
-import type { SiteData } from '@/lib/types'
+import type { SiteSettings } from '@/lib/types'
 
 import { CartList, CartSummary } from './Overlays'
 import { StoreProvider, useStore } from './Store'
 
-function Inner({ site }: { site: SiteData }) {
+function Inner({ site }: { site: SiteSettings }) {
   const { items } = useStore()
   return (
     <div className="mx-auto max-w-[1000px] px-[clamp(16px,4vw,32px)] pt-[clamp(32px,6vw,64px)] pb-32">
@@ -35,7 +35,7 @@ function Inner({ site }: { site: SiteData }) {
   )
 }
 
-export function CartPage({ site }: { site: SiteData }) {
+export function CartPage({ site }: { site: SiteSettings }) {
   return (
     <StoreProvider>
       <div className="min-h-screen [background:radial-gradient(1200px_700px_at_80%_-10%,rgba(75,19,102,.28),transparent_60%),#050505]">
