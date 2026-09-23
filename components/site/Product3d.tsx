@@ -73,8 +73,11 @@ export function Product3d({ data, onChange }: { data: Product3dData; onChange?: 
               'min-camera-orbit': 'auto auto 2.6m',
               'max-camera-orbit': 'auto auto 2.6m',
               'field-of-view': '32deg',
-              style: { width: '100%', height: '100%', backgroundColor: 'transparent', ['--progress-bar-color' as string]: '#A76BE0' },
-            })}
+              // Sin la barra de carga nativa: se quedaba como una línea violeta en
+              // el borde superior del cuadro y parecía un fallo. La carga ya la
+              // indica el spinner propio de arriba.
+              style: { width: '100%', height: '100%', backgroundColor: 'transparent', ['--progress-bar-height' as string]: '0px' },
+            }, React.createElement('div', { slot: 'progress-bar', key: 'pb' }))}
             <EditableModel edit={edit} onChange={set && ((url) => set({ modelUrl: url }))} />
           </div>
         </div>
