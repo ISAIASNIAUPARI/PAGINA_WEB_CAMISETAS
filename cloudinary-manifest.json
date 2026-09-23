@@ -1,0 +1,19 @@
+{
+  "cloud_name": "foewxv45",
+  "asset_folder": "lams-studio",
+  "note": "Public_ids planos (sin '_' ni carpeta en el id) para evitar el error #9 del protocolo. Las imágenes del sitio viven en public/images, no aquí.",
+  "videos": [
+    { "public_id": "lamsvid1", "version": 1790192819, "width": 478, "height": 850, "duration_s": 30.6, "source": "source-originals/assets/video-1.mp4" },
+    { "public_id": "lamsvid2", "version": 1790192818, "width": 576, "height": 1024, "duration_s": 23.4, "source": "source-originals/assets/video-2.mp4" },
+    { "public_id": "lamsvid3", "version": 1790192817, "width": 576, "height": 768, "duration_s": 26.2, "source": "source-originals/assets/video-3.mp4" },
+    { "public_id": "lamsvid4", "version": 1790192816, "width": 576, "height": 1024, "duration_s": 12.7, "source": "source-originals/assets/video-4.mp4" }
+  ],
+  "video_transformations": {
+    "webm": "f_webm,vc_vp9,q_auto,w_720",
+    "mp4": "f_mp4,q_auto,w_720",
+    "poster": "so_1,f_auto,q_auto,w_480 (.jpg)"
+  },
+  "models": [
+    { "url": "https://res.cloudinary.com/foewxv45/raw/upload/v1788974257/web_con_animacion/camiseta_web.glb", "note": "Modelo 3D existente del diseño original; se sirve con la versión fijada en la URL." }
+  ]
+}

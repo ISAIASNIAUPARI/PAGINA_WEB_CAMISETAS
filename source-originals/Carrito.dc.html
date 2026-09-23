@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="none">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    a{color:#cdb6e4}
+    a:hover{color:#F4F4F6}
+  </style>
+  <script src="./image-slot.js"></script>
+</helmet>
+
+<div style="font-family:'Space Grotesk',system-ui,sans-serif;background:radial-gradient(1200px 700px at 80% -10%,rgba(75,19,102,.28),transparent 60%),#050505;color:#D9D9D9;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;min-height:100vh">
+
+  <nav style="position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:0 56px;height:64px;background:rgba(5,5,5,0.9);backdrop-filter:blur(14px);border-bottom:1px solid rgba(217,217,217,.1)">
+    <a href="FORMA.dc.html" style="font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;letter-spacing:.42em;color:#F4F4F6;text-decoration:none">LAMS STUDIO</a>
+    <a href="FORMA.dc.html" style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#8F9399;text-decoration:none">Seguir comprando</a>
+  </nav>
+
+  <div style="max-width:1000px;margin:0 auto;padding:clamp(32px,6vw,64px) clamp(16px,4vw,32px) 120px">
+
+    <sc-if value="{{ orderConfirmed }}" hint-placeholder-val="{{ false }}">
+      <div style="text-align:center;padding:80px 20px">
+        <div style="width:56px;height:56px;border-radius:50%;background:#0f0f12;border:1px solid rgba(217,217,217,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;color:#cdb6e4;font-size:24px">✓</div>
+        <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.03em;font-size:clamp(28px,4vw,42px);color:#F4F4F6;margin:0 0 12px">Pedido confirmado</h1>
+        <p style="color:#8F9399;max-width:420px;margin:0 auto 8px">Gracias por tu compra. Te escribiremos por WhatsApp o correo para coordinar el envío.</p>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#8F9399;margin-bottom:32px">N.º de pedido: {{ orderNumber }}</p>
+        <a href="FORMA.dc.html" style="display:inline-flex;padding:14px 28px;background:#D9D9D9;color:#050505;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;border-radius:3px">Volver a la tienda</a>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showCart }}" hint-placeholder-val="{{ true }}">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:#8F9399;margin-bottom:14px">Tu cesta</p>
+      <h1 style="font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.04em;font-size:clamp(32px,5vw,56px);line-height:0.95;color:#F4F4F6;margin:0 0 40px">{{ headline }}</h1>
+
+      <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:60px 0;color:#8F9399">
+          <p style="margin-bottom:20px">Tu cesta está vacía.</p>
+          <a href="FORMA.dc.html" style="color:#cdb6e4;text-decoration:underline">Ver la colección</a>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:48px;align-items:start">
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <sc-for list="{{ items }}" as="it" hint-placeholder-count="2">
+              <div style="display:flex;gap:16px;align-items:center;border:1px solid rgba(217,217,217,.1);border-radius:6px;padding:16px;background:#0a0a0c">
+                <div style="width:76px;height:96px;flex-shrink:0;border-radius:4px;overflow:hidden;background:#111111">
+                  <image-slot id="{{ it.slotId }}" src="{{ it.src }}" placeholder="Foto" style="width:100%;height:100%;object-fit:cover"></image-slot>
+                </div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px;color:#F4F4F6">{{ it.name }}</div>
+                  <div style="font-size:13px;color:#8F9399;margin-top:2px">{{ it.colorName }}</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#D9D9D9;margin-top:6px">{{ it.price }}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <button onclick="{{ it.onDec }}" style="width:26px;height:26px;border-radius:3px;border:1px solid rgba(217,217,217,.2);background:none;color:#D9D9D9;cursor:pointer;font-family:monospace">−</button>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:13px;min-width:16px;text-align:center">{{ it.qty }}</span>
+                  <button onclick="{{ it.onInc }}" style="width:26px;height:26px;border-radius:3px;border:1px solid rgba(217,217,217,.2);background:none;color:#D9D9D9;cursor:pointer;font-family:monospace">+</button>
+                </div>
+                <button onclick="{{ it.onRemove }}" style="background:none;border:none;color:#8F9399;cursor:pointer;font-size:12px;text-decoration:underline;margin-left:8px">Quitar</button>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="border:1px solid rgba(217,217,217,.12);border-radius:6px;padding:24px;background:#0a0a0c;position:sticky;top:88px">
+            <sc-if value="{{ showCheckoutForm }}" hint-placeholder-val="{{ false }}">
+              <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:18px;color:#F4F4F6;margin:0 0 18px">Datos de pago</h2>
+              <form onsubmit="{{ onCheckoutSubmit }}" style="display:flex;flex-direction:column;gap:14px">
+                <input value="{{ checkoutName }}" onchange="{{ onCheckoutNameChange }}" placeholder="Nombre completo" required="{{ true }}" style="padding:12px 14px;background:#111111;border:1px solid rgba(217,217,217,.12);border-radius:4px;color:#D9D9D9;font-family:inherit;font-size:13px;outline:none">
+                <input value="{{ checkoutAddress }}" onchange="{{ onCheckoutAddressChange }}" placeholder="Dirección de envío" required="{{ true }}" style="padding:12px 14px;background:#111111;border:1px solid rgba(217,217,217,.12);border-radius:4px;color:#D9D9D9;font-family:inherit;font-size:13px;outline:none">
+                <input value="{{ checkoutCard }}" onchange="{{ onCheckoutCardChange }}" placeholder="Número de tarjeta (simulado)" maxlength="19" required="{{ true }}" style="padding:12px 14px;background:#111111;border:1px solid rgba(217,217,217,.12);border-radius:4px;color:#D9D9D9;font-family:inherit;font-size:13px;outline:none">
+                <div style="display:flex;gap:10px">
+                  <input value="{{ checkoutExpiry }}" onchange="{{ onCheckoutExpiryChange }}" placeholder="MM/AA" maxlength="5" required="{{ true }}" style="flex:1;padding:12px 14px;background:#111111;border:1px solid rgba(217,217,217,.12);border-radius:4px;color:#D9D9D9;font-family:inherit;font-size:13px;outline:none">
+                  <input value="{{ checkoutCvc }}" onchange="{{ onCheckoutCvcChange }}" placeholder="CVC" maxlength="4" required="{{ true }}" style="flex:1;padding:12px 14px;background:#111111;border:1px solid rgba(217,217,217,.12);border-radius:4px;color:#D9D9D9;font-family:inherit;font-size:13px;outline:none">
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;color:#8F9399;padding-top:6px">
+                  <span>Total</span><span style="font-family:'JetBrains Mono',monospace;color:#F4F4F6">${{ total }}</span>
+                </div>
+                <button type="submit" style="margin-top:6px;padding:14px;background:#D9D9D9;color:#050505;border:none;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;cursor:pointer">Pagar y confirmar</button>
+                <button type="button" onclick="{{ onCancelCheckout }}" style="background:none;border:none;color:#8F9399;font-size:12px;text-decoration:underline;cursor:pointer">Volver a la cesta</button>
+              </form>
+            </sc-if>
+
+            <sc-if value="{{ showSummary }}" hint-placeholder-val="{{ true }}">
+              <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:18px;color:#F4F4F6;margin:0 0 18px">Resumen</h2>
+              <div style="display:flex;flex-direction:column;gap:10px;font-size:14px;color:#8F9399">
+                <div style="display:flex;justify-content:space-between"><span>Subtotal</span><span style="color:#D9D9D9">${{ subtotal }}</span></div>
+                <div style="display:flex;justify-content:space-between"><span>Envío</span><span style="color:#D9D9D9">{{ shippingLabel }}</span></div>
+                <div style="display:flex;justify-content:space-between;padding-top:10px;border-top:1px solid rgba(217,217,217,.12);font-family:'JetBrains Mono',monospace;color:#F4F4F6;font-size:15px"><span>Total</span><span>${{ total }}</span></div>
+              </div>
+              <button onclick="{{ onStartCheckout }}" style="width:100%;margin-top:20px;padding:14px;background:#D9D9D9;color:#050505;border:none;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;cursor:pointer">Finalizar compra</button>
+            </sc-if>
+          </div>
+        </div>
+      </sc-if>
+    </sc-if>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    items: [],
+    checkoutOpen: false,
+    orderConfirmed: false,
+    orderNumber: '',
+    checkoutName: '', checkoutAddress: '', checkoutCard: '', checkoutExpiry: '', checkoutCvc: '',
+  };
+
+  componentDidMount() {
+    this.setState({ items: this.loadCart() });
+  }
+
+  loadCart() {
+    try { return JSON.parse(window.localStorage.getItem('lams-cart') || '[]'); } catch (e) { return []; }
+  }
+
+  saveCart(items) {
+    try { window.localStorage.setItem('lams-cart', JSON.stringify(items)); } catch (e) {}
+  }
+
+  updateQty(slotId, delta) {
+    const items = this.state.items.map(i => i.slotId === slotId ? { ...i, qty: Math.max(1, i.qty + delta) } : i);
+    this.setState({ items }); this.saveCart(items);
+  }
+
+  removeItem(slotId) {
+    const items = this.state.items.filter(i => i.slotId !== slotId);
+    this.setState({ items }); this.saveCart(items);
+  }
+
+  priceNum(p) { return parseFloat(String(p).replace(/[^0-9.]/g, '')) || 0; }
+
+  renderVals() {
+    const items = this.state.items;
+    const subtotal = items.reduce((n, i) => n + this.priceNum(i.price) * i.qty, 0);
+    const shipping = items.length && subtotal < 60 ? 6 : 0;
+    const total = subtotal + shipping;
+
+    return {
+      isEmpty: items.length === 0,
+      hasItems: items.length > 0,
+      headline: items.length ? 'Revisa tu pedido.' : 'Tu cesta.',
+      orderConfirmed: this.state.orderConfirmed,
+      showCart: !this.state.orderConfirmed,
+      orderNumber: this.state.orderNumber,
+      items: items.map(it => ({
+        ...it,
+        onInc: () => this.updateQty(it.slotId, 1),
+        onDec: () => this.updateQty(it.slotId, -1),
+        onRemove: () => this.removeItem(it.slotId),
+      })),
+      subtotal: subtotal.toFixed(2),
+      shippingLabel: shipping ? '$' + shipping.toFixed(2) : 'Gratis',
+      total: total.toFixed(2),
+      showCheckoutForm: this.state.checkoutOpen,
+      showSummary: !this.state.checkoutOpen,
+      onStartCheckout: () => this.setState({ checkoutOpen: true }),
+      onCancelCheckout: () => this.setState({ checkoutOpen: false }),
+      checkoutName: this.state.checkoutName,
+      checkoutAddress: this.state.checkoutAddress,
+      checkoutCard: this.state.checkoutCard,
+      checkoutExpiry: this.state.checkoutExpiry,
+      checkoutCvc: this.state.checkoutCvc,
+      onCheckoutNameChange: (e) => this.setState({ checkoutName: e.target.value }),
+      onCheckoutAddressChange: (e) => this.setState({ checkoutAddress: e.target.value }),
+      onCheckoutCardChange: (e) => this.setState({ checkoutCard: e.target.value }),
+      onCheckoutExpiryChange: (e) => this.setState({ checkoutExpiry: e.target.value }),
+      onCheckoutCvcChange: (e) => this.setState({ checkoutCvc: e.target.value }),
+      onCheckoutSubmit: (e) => {
+        e.preventDefault();
+        const orderNumber = 'LAMS-' + Math.floor(100000 + Math.random() * 900000);
+        this.saveCart([]);
+        this.setState({ orderConfirmed: true, orderNumber, items: [] });
+      },
+    };
+  }
+}
+
+</script>
+</body>
+</html>

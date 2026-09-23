@@ -1,0 +1,17 @@
+{
+  "eyebrow": "Síguenos",
+  "title": "Redes sociales",
+  "links": [
+    { "label": "Facebook", "href": "https://www.facebook.com/share/1JGnPmms8z/", "icon": "/images/facebook.png" },
+    { "label": "TikTok", "href": "https://vt.tiktok.com/ZSqCJFhA2/", "icon": "/images/tiktok.png" },
+    { "label": "Instagram", "href": "https://www.instagram.com/isaias.ai_", "icon": "/images/instagram.png" }
+  ],
+  "videosEyebrow": "Contenido",
+  "videosTitle": "Nuestros vídeos",
+  "videos": [
+    { "url": "https://res.cloudinary.com/foewxv45/video/upload/v1790192819/lamsvid1.mp4" },
+    { "url": "https://res.cloudinary.com/foewxv45/video/upload/v1790192818/lamsvid2.mp4" },
+    { "url": "https://res.cloudinary.com/foewxv45/video/upload/v1790192817/lamsvid3.mp4" },
+    { "url": "https://res.cloudinary.com/foewxv45/video/upload/v1790192816/lamsvid4.mp4" }
+  ]
+}

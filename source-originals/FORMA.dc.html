@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="none">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;family=Instrument+Serif:ital@0;1&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    a{color:#BFC2C7}
+    a:hover{color:#D9D9D9}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes marqueeScroll{to{transform:translateX(-50%)}}
+    @keyframes testiLeft{to{transform:translateX(-50%)}}
+    @keyframes testiRight{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+    @keyframes botSpin{to{transform:rotate(360deg)}}
+    @keyframes botPulse{0%,100%{opacity:.7}50%{opacity:1}}
+    @media (prefers-reduced-motion: reduce){.a{animation:none!important;opacity:1!important}}
+  </style>
+  <script src="./image-slot.js"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+</helmet>
+
+<div ref="{{ setRootRef }}" style="font-family:'Space Grotesk',system-ui,sans-serif;background:radial-gradient(1200px 700px at 80% -10%,rgba(75,19,102,.35),transparent 60%),radial-gradient(900px 600px at -10% 30%,rgba(45,10,58,.4),transparent 60%),#050505;color:#D9D9D9;font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased">
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:100;height:64px;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 clamp(16px,4vw,56px);background:rgba(5,5,5,0.88);backdrop-filter:blur(14px);border-bottom:1px solid {{ navBorderColor }};transition:border-color .3s;overflow:hidden">
+    <a href="#" style="font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;letter-spacing:.42em;color:#F4F4F6;text-decoration:none">LAMS STUDIO</a>
+    <ul style="display:flex;gap:clamp(14px,3vw,36px);list-style:none;flex-shrink:1;overflow:hidden">
+      <li style="white-space:nowrap"><a href="#coleccion" style="font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#8F9399;text-decoration:none;transition:color .25s" style-hover="color:#D9D9D9">Colección</a></li>
+      <li style="white-space:nowrap"><a href="#nosotros" style="font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#8F9399;text-decoration:none;transition:color .25s" style-hover="color:#D9D9D9">Nosotros</a></li>
+      <li style="white-space:nowrap"><a href="#newsletter" style="font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:#8F9399;text-decoration:none;transition:color .25s" style-hover="color:#D9D9D9">Comunidad</a></li>
+    </ul>
+    <a href="Carrito.dc.html" style="display:flex;align-items:center;gap:9px;padding:10px 20px;border-radius:99px;background:#0f0f12;border:1px solid rgba(217,217,217,.22);box-shadow:0 6px 16px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.04);font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#D9D9D9;cursor:pointer;transition:box-shadow .25s,border-color .25s;font-family:'JetBrains Mono',monospace;text-decoration:none;white-space:nowrap;flex-shrink:0" style-hover="border-color:rgba(217,217,217,.4);box-shadow:0 8px 20px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.06)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h2l2.4 12.2a2 2 0 002 1.8h8.6a2 2 0 002-1.7L21 8H6"></path><circle cx="9" cy="20" r="1"></circle><circle cx="17" cy="20" r="1"></circle></svg>
+      Carrito ({{ cartCount }})
+    </a>
+  </nav>
+
+  <div style="position:fixed;top:64px;left:0;right:0;z-index:99;border-bottom:1px solid rgba(217,217,217,.08);background:rgba(5,5,5,.65);backdrop-filter:blur(12px);overflow:hidden;height:34px;display:flex;align-items:center">
+    <div style="display:flex;gap:56px;white-space:nowrap;animation:marqueeScroll 90s linear infinite;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#8F9399">
+      <span style="display:inline-flex;align-items:center;gap:56px">
+        <span><i style="color:#A76BE0;font-style:normal">◆</i> Colección Otoño 2026 activa</span>
+        <span><i style="color:#A76BE0;font-style:normal">◆</i> Envío gratis desde $60 USD</span>
+        <span><i style="color:#A76BE0;font-style:normal">◆</i> Algodón peinado de fibra larga</span>
+        <span><i style="color:#A76BE0;font-style:normal">◆</i> Devolución 30 días sin preguntas</span>
+        <span><i style="color:#A76BE0;font-style:normal">◆</i> Piezas limitadas cada temporada</span>
+      </span>
+      <span style="display:inline-flex;align-items:center;gap:56px">
+        <span><i style="color:#A76BE0;font-style:normal">◆</i> Colección Otoño 2026 activa</span>
+        <span><i style="color:#A76BE0;font-style:normal">◆</i> Envío gratis desde $60 USD</span>
+        <span><i style="color:#A76BE0;font-style:normal">◆</i> Algodón peinado de fibra larga</span>
+        <span><i style="color:#A76BE0;font-style:normal">◆</i> Devolución 30 días sin preguntas</span>
+        <span><i style="color:#A76BE0;font-style:normal">◆</i> Piezas limitadas cada temporada</span>
+      </span>
+    </div>
+  </div>
+
+  <section style="display:flex;flex-wrap:wrap;min-height:100vh;padding-top:98px">
+    <div style="flex:1 1 480px;display:flex;flex-direction:column;justify-content:center;padding:clamp(40px,8vw,80px) clamp(20px,5vw,40px) clamp(40px,8vw,80px) clamp(20px,5vw,80px)">
+      <p class="a" style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:#8F9399;margin-bottom:28px;display:flex;align-items:center;gap:12px;animation:fadeUp .7s cubic-bezier(0.25,0.46,0.45,0.94) .1s forwards;opacity:0">
+        <span style="display:block;width:32px;height:1px;background:#8F9399"></span>Nueva colección · Otoño 2026
+      </p>
+      <h1 class="a" style="font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.05em;font-size:clamp(58px,9.2vw,156px);line-height:0.84;color:#F4F4F6;margin:0 0 28px;animation:fadeUp .7s cubic-bezier(0.25,0.46,0.45,0.94) .22s forwards;opacity:0">
+        <span style="display:block">LO QUE LLEVAS</span>
+        <span style="display:block;-webkit-text-stroke:1px #8F9399;color:transparent">CADA DÍA</span>
+        <span style="display:block;font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;letter-spacing:normal;background:linear-gradient(180deg,#efe9f7 0%,#b89cd6 45%,#6e3aa0 100%);-webkit-background-clip:text;background-clip:text;color:transparent">importa.</span>
+      </h1>
+      <p class="a" style="font-size:17px;line-height:1.72;color:#8F9399;max-width:400px;margin-bottom:52px;text-wrap:pretty;animation:fadeUp .7s cubic-bezier(0.25,0.46,0.45,0.94) .35s forwards;opacity:0">Cuatro camisetas de algodón premium en colores que duran más allá de las temporadas. Sin tendencias. Sin distracciones. Solo la pieza perfecta.</p>
+      <div class="a" style="display:flex;align-items:center;gap:20px;animation:fadeUp .7s cubic-bezier(0.25,0.46,0.45,0.94) .52s forwards;opacity:0">
+        <a href="#coleccion" style="display:inline-flex;align-items:center;gap:10px;padding:15px 30px;background:#D9D9D9;color:#050505;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;border:none;border-radius:3px;cursor:pointer;text-decoration:none;transition:background .25s cubic-bezier(0.25,0.46,0.45,0.94),color .25s,transform .2s cubic-bezier(0.25,0.46,0.45,0.94)" style-hover="background:#4B1366;color:#D9D9D9;transform:translateY(-2px)">Ver la colección
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+        <a href="#nosotros" style="font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#8F9399;text-decoration:none;border:none;background:none;cursor:pointer;padding:0 0 2px;transition:color .25s" style-hover="color:#D9D9D9;text-decoration:underline;text-underline-offset:3px">Nuestra historia</a>
+      </div>
+      <div class="a" style="margin-top:72px;display:flex;align-items:center;gap:16px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#8F9399;animation:fadeUp .7s cubic-bezier(0.25,0.46,0.45,0.94) .65s forwards;opacity:0">
+        <span style="width:36px;height:1px;background:currentColor"></span>Desliza para explorar
+      </div>
+    </div>
+    <div onmouseenter="{{ onHeroEnter }}" onmouseleave="{{ onHeroLeave }}" style="position:relative;overflow:hidden;background:#111111;margin:40px 40px 40px 0;border-radius:6px">
+      <image-slot id="hero-main" src="assets/prod-wave-white.webp" placeholder="Foto: algodón crudo" style="{{ heroImgStyle }}"></image-slot>
+      <div style="position:absolute;bottom:36px;right:36px;background:rgba(17,17,17,.85);backdrop-filter:blur(10px);padding:14px 22px;border-radius:3px;pointer-events:none;border:1px solid rgba(217,217,217,.12)">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:16px;letter-spacing:-.01em;color:#F4F4F6;display:block">Ola del Pacífico</span>
+        <span style="font-size:12px;color:#8F9399;letter-spacing:.04em">Blanco · $40</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="coleccion" style="padding:clamp(56px,10vw,100px) clamp(20px,5vw,80px);background:radial-gradient(1000px 600px at 85% 0%,rgba(45,10,58,.3),transparent 60%),radial-gradient(800px 500px at 0% 60%,rgba(75,19,102,.22),transparent 60%),#050505">
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;gap:20px;flex-wrap:wrap">
+      <div>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:#8F9399;margin-bottom:14px">Sección 02 / Edición 09</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.045em;font-size:clamp(38px,5.6vw,80px);line-height:0.92;color:#F4F4F6">Colección<br>destacada.</h2>
+      </div>
+      <div style="text-align:right;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#8F9399;line-height:1.8">
+        <div>08 / 47 PIEZAS MOSTRADAS</div>
+        <div>ORDENAR · SEÑAL</div>
+      </div>
+    </div>
+    <hr style="border:none;border-top:1px solid rgba(217,217,217,.12);margin-bottom:56px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px">
+      <sc-for list="{{ products }}" as="p" hint-placeholder-count="4">
+        <div onmouseenter="{{ p.onEnter }}" onmouseleave="{{ p.onLeave }}" style="cursor:pointer">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#8F9399">{{ p.code }}</span>
+            <sc-if value="{{ p.chip }}" hint-placeholder-val="{{ false }}">
+              <span style="padding:4px 10px;border:1px solid rgba(217,217,217,.25);border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:#D9D9D9">{{ p.chip }}</span>
+            </sc-if>
+          </div>
+          <div style="position:relative;aspect-ratio:3/4;overflow:hidden;background:repeating-linear-gradient(135deg,#111111,#111111 8px,#0c0c0c 8px,#0c0c0c 16px);border-radius:4px;border:1px solid rgba(217,217,217,.1);margin-bottom:14px">
+            <image-slot id="{{ p.slotId }}" src="{{ p.src }}" placeholder="{{ p.placeholder }}" style="{{ p.imgStyle }}"></image-slot>
+            <span style="position:absolute;top:12px;right:12px;width:9px;height:9px;border-radius:50%;background:{{ p.colorHex }};border:1px solid rgba(255,255,255,.3);z-index:2"></span>
+            <div style="{{ p.overlayStyle }}">
+              <button onclick="{{ p.onAdd }}" style="{{ p.addStyle }}">+ Añadir</button>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#8F9399">{{ p.category }}</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;letter-spacing:-.01em;color:#F4F4F6">{{ p.name }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8F9399;margin-top:2px">{{ p.price }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="nosotros" style="background:radial-gradient(1000px 600px at 15% -10%,rgba(75,19,102,.3),transparent 60%),radial-gradient(800px 500px at 100% 40%,rgba(45,10,58,.3),transparent 60%),#0a0a0c;padding:clamp(56px,10vw,96px) clamp(20px,5vw,80px)">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:48px;margin-bottom:72px">
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:400;font-size:clamp(36px,4.6vw,72px);color:#F4F4F6;line-height:1.04;letter-spacing:-.03em;max-width:560px">Ropa con la que no tienes<br>que <em style="font-family:'Instrument Serif',serif;font-style:italic;color:#cdb6e4;font-weight:400">pensar.</em></h2>
+      <p style="font-size:16px;line-height:1.75;color:#8F9399;max-width:340px;padding-top:6px;text-wrap:pretty">Diseñamos para la realidad de cada mañana. Piezas que se combinan solas, que no piden atención, que simplemente funcionan cuando las necesitas.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));border-top:1px solid rgba(217,217,217,.1)">
+      <sc-for list="{{ valueCards }}" as="card" hint-placeholder-count="3">
+        <div onmouseenter="{{ card.onEnter }}" onmouseleave="{{ card.onLeave }}" style="{{ card.cardStyle }}">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:52px;font-style:italic;color:rgba(167,107,224,.25);line-height:1;margin-bottom:22px">{{ card.n }}</div>
+          <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:23px;color:#EDEBF0;margin-bottom:12px">{{ card.name }}</h3>
+          <p style="font-size:14px;line-height:1.75;color:#8F9399">{{ card.desc }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="width:100%;background:#0B0B0B;padding:clamp(56px,10vw,100px) clamp(20px,5vw,80px)">
+    <div style="max-width:1100px;margin:0 auto">
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:56px">
+
+        <div style="flex:1 1 380px;min-width:0">
+          <div style="aspect-ratio:3/4;border:1px solid rgba(217,217,217,.12);background:radial-gradient(90% 70% at 50% 115%, #3A0F4D 0%, transparent 60%),#050505;border-radius:6px;width:100%;max-height:76vh;position:relative;overflow:hidden">
+            <model-viewer
+              src="https://res.cloudinary.com/foewxv45/raw/upload/v1788974257/web_con_animacion/camiseta_web.glb"
+              alt="Camiseta 3D navegable"
+              loading="eager"
+              camera-controls
+              disable-zoom
+              disable-pan
+              disable-tap
+              auto-rotate
+              auto-rotate-delay="0"
+              rotation-per-second="16deg"
+              interaction-prompt="none"
+              touch-action="none"
+              shadow-intensity="0.75"
+              shadow-softness="1"
+              exposure="1.15"
+              camera-orbit="25deg 82deg 2.6m"
+              min-camera-orbit="auto auto 2.6m"
+              max-camera-orbit="auto auto 2.6m"
+              field-of-view="32deg"
+              style="width:100%;height:100%;background-color:transparent;--progress-bar-color:#A76BE0"
+            ></model-viewer>
+          </div>
+        </div>
+
+        <div style="flex:1 1 320px;min-width:0">
+          <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.04em;font-size:clamp(28px,4.6vw,48px);line-height:0.95;color:#F4F4F6;margin-bottom:14px">Camiseta esencial</h2>
+          <span style="font-family:'JetBrains Mono',monospace;font-weight:500;font-size:24px;letter-spacing:-.01em;color:#F4F4F6">$40</span>
+
+          <div style="margin-top:28px">
+            <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8F9399">Color — {{ shirt3dColorName }}</span>
+            <div style="display:flex;gap:10px;margin-top:10px">
+              <sc-for list="{{ shirt3dColors }}" as="c" hint-placeholder-count="4">
+                <button onclick="{{ c.onSelect }}" style="{{ c.swatchStyle }}"></button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="margin-top:26px">
+            <span style="font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#8F9399">Talla — {{ shirt3dSize }}</span>
+            <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+              <sc-for list="{{ shirt3dSizes }}" as="s" hint-placeholder-count="5">
+                <button onclick="{{ s.onSelect }}" style="{{ s.btnStyle }}">{{ s.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="margin-top:28px;padding-top:20px;border-top:1px solid rgba(217,217,217,.12)">
+            <span style="font-size:13px;color:#8F9399">Envío gratis desde $60 · Devolución 30 días</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section style="padding:100px 0;overflow:hidden;background:radial-gradient(900px 500px at 50% 0%,rgba(75,19,102,.22),transparent 60%),#050505">
+    <div style="text-align:center;margin-bottom:48px;padding:0 80px">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:#8F9399;margin-bottom:14px">Lo que dicen</p>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.04em;font-size:clamp(30px,4.6vw,52px);line-height:0.95;color:#F4F4F6">Clientes reales.</h2>
+    </div>
+    <div style="display:flex;gap:20px;white-space:nowrap;animation:testiLeft 48s linear infinite;margin-bottom:20px">
+      <sc-for list="{{ testimonialsRowA }}" as="t" hint-placeholder-count="4">
+        <div style="display:inline-flex;flex-direction:column;gap:10px;width:340px;flex-shrink:0;background:#0a0a0c;border:1px solid rgba(217,217,217,.1);border-radius:6px;padding:24px;white-space:normal">
+          <span style="color:#e6bb52;font-size:14px;letter-spacing:.1em">★★★★★</span>
+          <p style="font-size:14px;line-height:1.6;color:#D9D9D9">{{ t.text }}</p>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;color:#F4F4F6">{{ t.name }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#8F9399;border:1px solid rgba(217,217,217,.15);border-radius:99px;padding:2px 8px">Comprador verificado</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;gap:20px;white-space:nowrap;animation:testiRight 48s linear infinite">
+      <sc-for list="{{ testimonialsRowB }}" as="t" hint-placeholder-count="4">
+        <div style="display:inline-flex;flex-direction:column;gap:10px;width:340px;flex-shrink:0;background:#0a0a0c;border:1px solid rgba(217,217,217,.1);border-radius:6px;padding:24px;white-space:normal">
+          <span style="color:#e6bb52;font-size:14px;letter-spacing:.1em">★★★★★</span>
+          <p style="font-size:14px;line-height:1.6;color:#D9D9D9">{{ t.text }}</p>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;color:#F4F4F6">{{ t.name }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#8F9399;border:1px solid rgba(217,217,217,.15);border-radius:99px;padding:2px 8px">Comprador verificado</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="social" style="max-width:1400px;margin:0 auto;padding:clamp(56px,10vw,100px) clamp(20px,5vw,80px) 40px">
+    <div style="text-align:center;margin-bottom:48px">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:#8F9399;margin-bottom:12px">Síguenos</p>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.045em;font-size:clamp(30px,5.6vw,64px);line-height:0.92;color:#F4F4F6">Redes sociales</h2>
+    </div>
+    <hr style="border:none;border-top:1px solid rgba(217,217,217,.12)">
+    <div style="display:flex;justify-content:center;align-items:center;gap:48px;flex-wrap:wrap;padding:40px 0">
+      <a href="https://www.facebook.com/share/1JGnPmms8z/" target="_blank" rel="noopener noreferrer" style="display:flex;flex-direction:column;align-items:center;gap:12px;text-decoration:none;color:#D9D9D9;transition:transform .2s" style-hover="transform:translateY(-4px)">
+        <div style="width:88px;height:88px;border:1px solid rgba(217,217,217,.12);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111111;transition:border-color .2s" style-hover="border-color:#A76BE0">
+          <img src="assets/fb-logo.png" alt="Facebook" style="width:64px;height:64px;object-fit:contain">
+        </div>
+        <span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#8F9399">Facebook</span>
+      </a>
+      <a href="https://vt.tiktok.com/ZSqCJFhA2/" target="_blank" rel="noopener noreferrer" style="display:flex;flex-direction:column;align-items:center;gap:12px;text-decoration:none;color:#D9D9D9;transition:transform .2s" style-hover="transform:translateY(-4px)">
+        <div style="width:88px;height:88px;border:1px solid rgba(217,217,217,.12);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111111;transition:border-color .2s" style-hover="border-color:#A76BE0">
+          <img src="assets/tiktok-logo.png" alt="TikTok" style="width:56px;height:56px;object-fit:contain">
+        </div>
+        <span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#8F9399">TikTok</span>
+      </a>
+      <a href="https://www.instagram.com/isaias.ai_" target="_blank" rel="noopener noreferrer" style="display:flex;flex-direction:column;align-items:center;gap:12px;text-decoration:none;color:#D9D9D9;transition:transform .2s" style-hover="transform:translateY(-4px)">
+        <div style="width:88px;height:88px;border:1px solid rgba(217,217,217,.12);border-radius:6px;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#111111;transition:border-color .2s" style-hover="border-color:#A76BE0">
+          <img src="assets/insta-logo.png" alt="Instagram" style="width:64px;height:64px;object-fit:contain">
+        </div>
+        <span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#8F9399">Instagram</span>
+      </a>
+    </div>
+    <hr style="border:none;border-top:1px solid rgba(217,217,217,.12)">
+    <div style="margin-top:48px">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:#8F9399;margin-bottom:12px;text-align:center">Contenido</p>
+      <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:400;letter-spacing:-.03em;font-size:clamp(22px,4.6vw,40px);text-align:center;margin-bottom:40px;color:#F4F4F6">Nuestros vídeos</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:24px;max-width:1300px;margin:0 auto">
+        <sc-for list="{{ videoSlots }}" as="v" hint-placeholder-count="4">
+          <div style="aspect-ratio:9/16;border-radius:6px;overflow:hidden;background:#111111;border:1px solid rgba(217,217,217,.12)">
+            <video src="{{ v.src }}" loop="{{ true }}" autoplay="{{ true }}" playsinline="{{ true }}" controls="{{ true }}" style="width:100%;height:100%;object-fit:cover"></video>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="newsletter" style="background:radial-gradient(1000px 600px at 50% 0%,rgba(75,19,102,.32),transparent 60%),#0f0f12;border-top:1px solid rgba(217,217,217,.12)">
+    <div style="max-width:620px;margin:0 auto;padding:120px 48px;text-align:center">
+      <p style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:#8F9399;margin-bottom:22px;display:flex;align-items:center;justify-content:center;gap:12px">
+        <span style="display:block;width:24px;height:1px;background:#8F9399"></span>Únete a la comunidad<span style="display:block;width:24px;height:1px;background:#8F9399"></span>
+      </p>
+      <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.04em;font-size:clamp(34px,5vw,64px);line-height:0.94;color:#F4F4F6;margin-bottom:22px">Las piezas que llegan,<br><em style="font-family:'Instrument Serif',serif;font-style:italic;letter-spacing:normal;color:#cdb6e4">las primera en saberlo.</em></h2>
+      <p style="font-size:16px;line-height:1.75;color:#8F9399;margin-bottom:48px;text-wrap:pretty">Suscríbete y recibe acceso anticipado a nuevos colores, ediciones limitadas y descuentos exclusivos para la comunidad FORMA. Sin ruido — solo lo que importa.</p>
+      <form onsubmit="{{ onSubscribe }}" style="{{ formStyle }}">
+        <input type="email" value="{{ emailValue }}" onchange="{{ onEmailChange }}" onfocus="{{ onEmailFocus }}" onblur="{{ onEmailBlur }}" disabled="{{ subscribed }}" placeholder="{{ emailPlaceholder }}" aria-label="Correo electrónico" required="{{ true }}" style="flex:1;padding:16px 18px;font-family:inherit;font-size:14px;color:#D9D9D9;background:none;border:none;outline:none;min-width:0">
+        <button type="submit" style="{{ subscribeBtnStyle }}" style-hover="{{ subscribeBtnHoverStyle }}">{{ subscribeBtnLabel }}</button>
+      </form>
+      <p style="font-size:12px;color:#8F9399">Sin spam. Baja cuando quieras. Consulta nuestra <a href="#" style="color:#BFC2C7;text-decoration:underline;text-underline-offset:3px">política de privacidad</a>.</p>
+    </div>
+  </section>
+
+  <section id="contacto" style="padding:clamp(56px,10vw,100px) clamp(20px,5vw,80px);background:radial-gradient(900px 600px at 90% 0%,rgba(45,10,58,.28),transparent 60%),radial-gradient(800px 500px at 0% 70%,rgba(75,19,102,.2),transparent 60%),#050505">
+    <div style="max-width:1100px;margin:0 auto">
+      <div style="text-align:center;margin-bottom:56px">
+        <p style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:#8F9399;margin-bottom:16px">Atención al cliente</p>
+        <h2 style="font-family:'Space Grotesk',sans-serif;font-weight:500;letter-spacing:-.04em;font-size:clamp(34px,5vw,60px);line-height:0.94;color:#F4F4F6;margin-bottom:18px">Contáctanos</h2>
+        <p style="color:#8F9399;max-width:520px;margin:0 auto;font-size:16px;line-height:1.7;text-wrap:pretty">¿Dudas sobre tallas, envíos o un pedido? Escríbenos y te respondemos lo antes posible.</p>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:0;border:1px solid rgba(217,217,217,.12);border-radius:6px;overflow:hidden;background:#111111">
+        <form onsubmit="{{ onContactSubmit }}" style="padding:48px;display:flex;flex-direction:column;gap:22px;border-right:1px solid rgba(217,217,217,.12)">
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#8F9399">Nombre completo</span>
+            <input type="text" value="{{ contactName }}" onchange="{{ onContactNameChange }}" placeholder="Juan Pérez" required="{{ true }}" style="padding:13px 14px;font-family:inherit;font-size:14px;color:#D9D9D9;background:#0B0B0B;border:1px solid rgba(217,217,217,.12);border-radius:3px;outline:none">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#8F9399">Correo electrónico</span>
+            <input type="email" value="{{ contactEmail }}" onchange="{{ onContactEmailChange }}" placeholder="juan@email.com" required="{{ true }}" style="padding:13px 14px;font-family:inherit;font-size:14px;color:#D9D9D9;background:#0B0B0B;border:1px solid rgba(217,217,217,.12);border-radius:3px;outline:none">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#8F9399">Teléfono</span>
+            <input type="tel" value="{{ contactPhone }}" onchange="{{ onContactPhoneChange }}" placeholder="+1 000 000 0000" style="padding:13px 14px;font-family:inherit;font-size:14px;color:#D9D9D9;background:#0B0B0B;border:1px solid rgba(217,217,217,.12);border-radius:3px;outline:none">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px">
+            <span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#8F9399">Mensaje</span>
+            <textarea rows="4" value="{{ contactMessage }}" onchange="{{ onContactMessageChange }}" placeholder="Escríbenos tu consulta… ¿qué necesitas?" style="padding:13px 14px;font-family:inherit;font-size:14px;color:#D9D9D9;background:#0B0B0B;border:1px solid rgba(217,217,217,.12);border-radius:3px;outline:none;resize:vertical"></textarea>
+          </label>
+          <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 30px;background:#D9D9D9;color:#050505;font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;border:none;border-radius:3px;cursor:pointer;transition:background .25s,color .25s" style-hover="background:#4B1366;color:#D9D9D9">
+            Enviar mensaje
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </button>
+          <span style="font-size:12px;color:#8F9399">Al enviar se abrirá WhatsApp para completar tu mensaje.</span>
+        </form>
+
+        <div style="padding:48px;background:#0B0B0B">
+          <h3 style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:24px;color:#EDEBF0;margin-bottom:28px">Información de contacto</h3>
+
+          <div style="display:flex;flex-direction:column;gap:24px">
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:36px;height:36px;flex-shrink:0;border-radius:50%;border:1px solid rgba(217,217,217,.12);display:flex;align-items:center;justify-content:center;color:#A76BE0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 1118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              </div>
+              <div>
+                <div style="font-size:14px;font-weight:500;color:#D9D9D9;margin-bottom:4px">Ubicación</div>
+                <div style="font-size:14px;color:#8F9399;line-height:1.6">Coworking La Floresta, Av. La Coruña E12-148 y Valladolid, Quito 170525</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:36px;height:36px;flex-shrink:0;border-radius:50%;border:1px solid rgba(217,217,217,.12);display:flex;align-items:center;justify-content:center;color:#A76BE0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 17.5c0 1-1.2 2-2.2 2.3-1.6.5-4.7-.4-7.6-3.3s-3.8-6-3.3-7.6c.3-1 1.3-2.2 2.3-2.2.4 0 .8.2 1 .6l1.3 2.2c.3.5.2 1.1-.2 1.5l-.8.8c-.3.3-.3.7-.1 1 .5.9 1.5 1.9 2.4 2.4.3.2.7.2 1-.1l.8-.8c.4-.4 1-.5 1.5-.2l2.2 1.3c.4.2.6.6.6 1z"></path></svg>
+              </div>
+              <div>
+                <div style="font-size:14px;font-weight:500;color:#D9D9D9;margin-bottom:4px">WhatsApp</div>
+                <div style="font-size:14px;color:#8F9399">+1 000 000 0000</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:36px;height:36px;flex-shrink:0;border-radius:50%;border:1px solid rgba(217,217,217,.12);display:flex;align-items:center;justify-content:center;color:#A76BE0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6l9 7 9-7"></path><rect x="3" y="5" width="18" height="14" rx="2"></rect></svg>
+              </div>
+              <div>
+                <div style="font-size:14px;font-weight:500;color:#D9D9D9;margin-bottom:4px">Correo</div>
+                <div style="font-size:14px;color:#8F9399">hola@formastudio.com</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:14px;align-items:flex-start">
+              <div style="width:36px;height:36px;flex-shrink:0;border-radius:50%;border:1px solid rgba(217,217,217,.12);display:flex;align-items:center;justify-content:center;color:#A76BE0">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
+              </div>
+              <div>
+                <div style="font-size:14px;font-weight:500;color:#D9D9D9;margin-bottom:4px">Horarios</div>
+                <div style="font-size:14px;color:#8F9399">Lunes a sábado, 10:00 – 19:00</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top:28px;aspect-ratio:16/9;border-radius:4px;border:1px solid rgba(217,217,217,.12);overflow:hidden">
+            <iframe src="https://www.google.com/maps?q=Coworking+La+Floresta,+Avenida+La+Coru%C3%B1a+E12-148+y+Valladolid,+170525+Quito&output=embed" style="width:100%;height:100%;border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+<footer style="background:#050505;padding:72px clamp(20px,5vw,80px) 0">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:40px;padding-bottom:56px">
+      <div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:20px;color:#F4F4F6;letter-spacing:.3em;margin-bottom:18px">LAMS STUDIO</div>
+        <p style="font-size:14px;line-height:1.7;color:rgba(217,217,217,.4);max-width:280px">Camisetas de algodón premium en cuatro colores atemporales. Cada pieza pensada para durar más que una temporada.</p>
+        <div style="display:flex;gap:12px;margin-top:24px">
+          <a href="#" aria-label="Instagram" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(217,217,217,.15);display:flex;align-items:center;justify-content:center;color:rgba(217,217,217,.6);text-decoration:none;transition:border-color .2s,color .2s" style-hover="border-color:#A76BE0;color:#A76BE0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg>
+          </a>
+          <a href="#" aria-label="TikTok" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(217,217,217,.15);display:flex;align-items:center;justify-content:center;color:rgba(217,217,217,.6);text-decoration:none;transition:border-color .2s,color .2s" style-hover="border-color:#A76BE0;color:#A76BE0">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.8a4.6 4.6 0 01-3.3-1.4v9.9a4.9 4.9 0 11-4.9-4.9c.3 0 .5 0 .8.1v2.5a2.4 2.4 0 102.4 2.3V2h2.4a4.6 4.6 0 003.3 3.8v2.8a7 7 0 01-.7 0z"></path></svg>
+          </a>
+          <a href="#" aria-label="YouTube" style="width:34px;height:34px;border-radius:50%;border:1px solid rgba(217,217,217,.15);display:flex;align-items:center;justify-content:center;color:rgba(217,217,217,.6);text-decoration:none;transition:border-color .2s,color .2s" style-hover="border-color:#A76BE0;color:#A76BE0">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="4"></rect><path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none"></path></svg>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(217,217,217,.35);margin-bottom:20px">Tienda</div>
+        <ul style="display:flex;flex-direction:column;gap:14px;list-style:none">
+          <li><a href="#coleccion" style="font-size:14px;color:rgba(217,217,217,.7);text-decoration:none;transition:color .2s" style-hover="color:#D9D9D9">Colección</a></li>
+          <li><a href="#coleccion" style="font-size:14px;color:rgba(217,217,217,.7);text-decoration:none;transition:color .2s" style-hover="color:#D9D9D9">Novedades</a></li>
+          <li><a href="#coleccion" style="font-size:14px;color:rgba(217,217,217,.7);text-decoration:none;transition:color .2s" style-hover="color:#D9D9D9">Ediciones limitadas</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(217,217,217,.35);margin-bottom:20px">Nosotros</div>
+        <ul style="display:flex;flex-direction:column;gap:14px;list-style:none">
+          <li><a href="#nosotros" style="font-size:14px;color:rgba(217,217,217,.7);text-decoration:none;transition:color .2s" style-hover="color:#D9D9D9">Manifiesto</a></li>
+          <li><a href="#nosotros" style="font-size:14px;color:rgba(217,217,217,.7);text-decoration:none;transition:color .2s" style-hover="color:#D9D9D9">Materiales</a></li>
+          <li><a href="#social" style="font-size:14px;color:rgba(217,217,217,.7);text-decoration:none;transition:color .2s" style-hover="color:#D9D9D9">Redes sociales</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(217,217,217,.35);margin-bottom:20px">Clientes</div>
+        <ul style="display:flex;flex-direction:column;gap:14px;list-style:none">
+          <li><a href="#contacto" style="font-size:14px;color:rgba(217,217,217,.7);text-decoration:none;transition:color .2s" style-hover="color:#D9D9D9">Contacto</a></li>
+          <li><a href="#" style="font-size:14px;color:rgba(217,217,217,.7);text-decoration:none;transition:color .2s" style-hover="color:#D9D9D9">Envíos y devoluciones</a></li>
+          <li><a href="#" style="font-size:14px;color:rgba(217,217,217,.7);text-decoration:none;transition:color .2s" style-hover="color:#D9D9D9">Guía de tallas</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div style="font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:rgba(217,217,217,.35);margin-bottom:20px">Envíos</div>
+        <div style="font-size:14px;color:rgba(217,217,217,.7);margin-bottom:6px">EE.UU. · USD</div>
+        <a href="#" style="font-size:14px;color:rgba(217,217,217,.7);text-decoration:underline;text-underline-offset:3px" style-hover="color:#D9D9D9">Cambiar región</a>
+      </div>
+    </div>
+
+    <div style="border-top:1px solid rgba(217,217,217,.08);padding:24px 0;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <span style="font-size:11px;letter-spacing:.05em;color:rgba(217,217,217,.3)">© 2026 LAMS STUDIO · Todos los derechos reservados</span>
+      <div style="display:flex;gap:24px;flex-wrap:wrap">
+        <a href="Privacidad.dc.html" style="font-size:11px;letter-spacing:.05em;color:rgba(217,217,217,.3);text-decoration:none" style-hover="color:rgba(217,217,217,.7)">Privacidad y Términos</a>
+      </div>
+    </div>
+  </footer>
+
+  <div style="position:fixed;right:24px;bottom:24px;z-index:120;display:flex;flex-direction:column;align-items:flex-end;gap:12px;pointer-events:none">
+    <sc-if value="{{ waBubbleText }}" hint-placeholder-val="{{ false }}">
+      <a href="{{ waLink }}" target="_blank" rel="noopener noreferrer" style="{{ waBubbleStyle }}">{{ waBubbleText }}</a>
+    </sc-if>
+    <a href="{{ waLink }}" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" style="pointer-events:auto;width:56px;height:56px;border-radius:50%;border:1px solid rgba(63,208,126,.35);background:radial-gradient(120% 120% at 30% 25%,#45e081,#1fae5d 60%,#128a48);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 14px 36px -8px rgba(31,174,93,.6);position:relative;text-decoration:none">
+      <span style="{{ waDotStyle }}">1</span>
+      <svg width="28" height="28" viewBox="0 0 32 32" fill="currentColor">
+        <path d="M16 3C9.4 3 4 8.4 4 15c0 2.1.6 4.1 1.6 5.9L4 29l8.3-1.6c1.7.9 3.6 1.4 5.7 1.4 6.6 0 12-5.4 12-12S22.6 3 16 3zm0 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-4.9 1 1-4.8-.3-.4c-1-1.6-1.5-3.4-1.5-5.3C4.9 9.5 9.9 4.9 16 4.9c5.6 0 10.2 4.6 10.2 10.2S21.6 24.8 16 24.8z"></path>
+        <path d="M21.6 18c-.3-.2-1.8-.9-2-1-.3-.1-.5-.2-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-1.7-.8-2.8-1.5-3.9-3.4-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.2.2 2.2 3.4 5.3 4.7 2 .8 2.7.9 3.7.8.6-.1 1.8-.8 2.1-1.5.3-.7.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z"></path>
+      </svg>
+    </a>
+    <button onclick="{{ onToggleBot }}" aria-label="Asistente" style="pointer-events:auto;width:56px;height:56px;border-radius:50%;background:#F4F4F6;cursor:pointer;border:none;position:relative;overflow:hidden;box-shadow:0 14px 36px -8px rgba(0,0,0,.6),0 0 16px rgba(140,120,255,.3);padding:9px">
+      <img src="assets/bot-icon.png" alt="Asistente" style="width:100%;height:100%;object-fit:contain;animation:botPulse 2.4s ease-in-out infinite">
+    </button>
+
+    <sc-if value="{{ botOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="pointer-events:auto;position:fixed;right:24px;bottom:96px;width:300px;max-height:420px;display:flex;flex-direction:column;background:#0a0a0c;border:1px solid rgba(217,217,217,.12);border-radius:10px;box-shadow:0 18px 50px -12px rgba(0,0,0,.5);overflow:hidden">
+        <div style="padding:14px 16px;border-bottom:1px solid rgba(217,217,217,.1);display:flex;align-items:center;justify-content:space-between">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;color:#F4F4F6">Asistente LAMS</span>
+          <button onclick="{{ onToggleBot }}" style="background:none;border:none;color:#8F9399;cursor:pointer;font-size:16px;line-height:1;padding:0">×</button>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-height:160px;max-height:260px">
+          <sc-for list="{{ botMessages }}" as="m" hint-placeholder-count="0">
+            <div style="{{ m.style }}">{{ m.text }}</div>
+          </sc-for>
+          <sc-if value="{{ botLoading }}" hint-placeholder-val="{{ false }}">
+            <div style="align-self:flex-start;font-family:'JetBrains Mono',monospace;font-size:11px;color:#8F9399">escribiendo…</div>
+          </sc-if>
+        </div>
+        <form onsubmit="{{ onBotSubmit }}" style="display:flex;border-top:1px solid rgba(217,217,217,.1)">
+          <input type="text" value="{{ botInput }}" onchange="{{ onBotInputChange }}" placeholder="Escribe tu mensaje…" style="flex:1;padding:12px 14px;background:none;border:none;outline:none;color:#D9D9D9;font-family:inherit;font-size:13px">
+          <button type="submit" style="padding:0 16px;background:none;border:none;color:#cdb6e4;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase">Enviar</button>
+        </form>
+      </div>
+    </sc-if>
+  </div>
+
+  <div style="{{ toastStyle }}">{{ toastMsg }}</div>
+
+  <sc-if value="{{ showCookies }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:22px;bottom:22px;z-index:80;width:min(430px,calc(100vw - 44px));background:#0f0f12;border:1px solid rgba(217,217,217,.12);border-radius:10px;padding:18px 20px;box-shadow:0 18px 44px rgba(0,0,0,.55)">
+      <h4 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:#F4F4F6">Ayúdenos a mejorar su experiencia</h4>
+      <p style="margin:10px 0 0;font-size:12px;line-height:1.55;color:#8F9399">Usamos cookies para el funcionamiento del sitio, analizar el tráfico y medir campañas. Al hacer clic en "Aceptar todas" aceptas nuestra <a href="#contacto" style="color:#cdb6e4;text-decoration:underline">Política de cookies</a> y la <a href="#contacto" style="color:#cdb6e4;text-decoration:underline">Política de privacidad</a>.</p>
+      <div style="margin-top:14px;display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+        <button type="button" onclick="{{ rejectCookies }}" style="background:transparent;border:0;padding:8px 0;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8F9399;text-decoration:underline;cursor:pointer" style-hover="color:#D9D9D9">Solo necesarias</button>
+        <button type="button" onclick="{{ acceptCookies }}" style="margin-left:auto;background:#D9D9D9;color:#050505;border:0;border-radius:4px;padding:11px 18px;font-family:'JetBrains Mono',monospace;font-weight:500;font-size:11px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:background .3s" style-hover="background:#cdb6e4">Aceptar todas las cookies</button>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    navScrolled: false,
+    heroHover: false,
+    waBubbleText: '',
+    waDotShow: false,
+    hoveredValue: null,
+    hoveredProduct: null,
+    cartCount: 0,
+    email: '',
+    emailFocused: false,
+    subscribed: false,
+    toastMsg: '',
+    toastShow: false,
+    shirt3dColor: 0,
+    shirt3dSize: 'L',
+    contactName: '',
+    contactEmail: '',
+    contactPhone: '',
+    contactMessage: '',
+    cookies: false,
+    botOpen: false,
+    botMessages: [],
+    botInput: '',
+    botLoading: false,
+  };
+
+  shirt3dColorBase = [
+    { name: 'Blanco natural', hex: '#F0EAE0' },
+    { name: 'Azul marino', hex: '#2A3A52' },
+    { name: 'Oliva', hex: '#6B7A5A' },
+    { name: 'Terracota', hex: '#C4714F' },
+  ];
+
+  valueBase = [
+    { n: '01', name: 'Algodón de primera', desc: 'Seleccionamos exclusivamente algodón peinado de fibra larga. Más suave al tacto, más resistente al lavado, más vivo en el color después de cien usos.' },
+    { n: '02', name: 'Paleta atemporal', desc: 'Cuatro colores elegidos para coexistir. Blanco cálido, azul marino profundo, verde de tierra y terracota suave. Todo combina con todo, sin esfuerzo.' },
+    { n: '03', name: 'Corte que dura', desc: 'Ni oversized de temporada, ni slim del año pasado. Un patrón estudiado para mantenerse bien lavado tras lavado, año tras año, sin concesiones.' },
+  ];
+
+  productBase = [
+    { name: 'Algodón crudo', code: 'FR-001', category: 'Camisetas', colorName: 'Blanco natural', colorHex: '#F0EAE0', price: '$38', chip: 'NUEVO', slotId: 'p-crudo', placeholder: 'Foto: algodón crudo', src: 'assets/EvhlPypuxJtfTedU.webp' },
+    { name: 'Noche atlántica', code: 'FR-014', category: 'Camisetas', colorName: 'Azul marino', colorHex: '#2A3A52', price: '$42', chip: null, slotId: 'p-noche', placeholder: 'Foto: noche atlántica', src: 'assets/pQqkNhWJCSVQtWlP.webp' },
+    { name: 'Verde de campo', code: 'FR-027', category: 'Camisetas', colorName: 'Oliva', colorHex: '#6B7A5A', price: '$40', chip: null, slotId: 'p-verde', placeholder: 'Foto: verde de campo', src: 'assets/prod-verde-nueva.webp' },
+    { name: 'Arcilla suave', code: 'FR-033', category: 'Camisetas', colorName: 'Terracota', colorHex: '#C4714F', price: '$40', chip: 'NUEVO', slotId: 'p-arcilla', placeholder: 'Foto: arcilla suave', src: 'assets/prod-arcilla-nueva.webp' },
+    { name: 'Llama violeta', code: 'FR-041', category: 'Ediciones', colorName: 'Granate', colorHex: '#5C1A24', price: '$52', chip: 'FINAL', slotId: 'p-llama', placeholder: 'Foto: llama violeta', src: 'assets/prod-flame-maroon.webp' },
+    { name: 'Tribal eléctrico', code: 'FR-045', category: 'Ediciones', colorName: 'Negro', colorHex: '#14161C', price: '$52', chip: null, slotId: 'p-tribal', placeholder: 'Foto: tribal eléctrico', src: 'assets/prod-flame-black.webp' },
+    { name: 'Ola del Pacífico', code: 'FR-052', category: 'Camisetas', colorName: 'Blanco', colorHex: '#F0EAE0', price: '$40', chip: null, slotId: 'p-ola', placeholder: 'Foto: ola del Pacífico', src: 'assets/prod-wave-white-card.webp' },
+    { name: 'Gris piedra', code: 'FR-058', category: 'Camisetas', colorName: 'Gris carbón', colorHex: '#4A4A48', price: '$36', chip: null, slotId: 'p-gris', placeholder: 'Foto: gris piedra', src: 'assets/prod-charcoal.webp' },
+  ];
+
+  testimonialsBase = [
+    { name: 'Mariana G.', text: '"La tela es súper suave y el corte queda perfecto. El envío llegó en solo dos días. Repetiré seguro."' },
+    { name: 'Carlos M.', text: '"Me daba miedo fallar con la talla, pero la guía es exacta. La camiseta es de gran calidad."' },
+    { name: 'Valentina S.', text: '"El diseño es idéntico a las fotos. Me encanta el estilo único que tiene la marca."' },
+    { name: 'Andrés P.', text: '"Compré tres colores distintos, todos con el mismo corte perfecto. Ya es mi marca de confianza."' },
+  ];
+
+  waSequence = [
+    { wait: 10000, text: '¿Buscas ayuda con tu talla?' },
+    { wait: 4000, text: 'Nuevas piezas cada temporada' },
+    { wait: 20000, text: 'Escríbenos, resolvemos rápido' },
+  ];
+
+  componentDidMount() {
+    this._onScroll = () => this.setState({ navScrolled: window.scrollY > 24 });
+    window.addEventListener('scroll', this._onScroll);
+    const cart = this.loadCart();
+    this.setState({ cartCount: cart.reduce((n, i) => n + i.qty, 0) });
+    this._waStep = 0;
+    this._waTick();
+    let saved = null;
+    try { saved = window.localStorage.getItem('forma-cookie-consent'); } catch (err) { saved = null; }
+    if (!saved) this.cookieTimer = setTimeout(() => this.setState({ cookies: true }), 1200);
+  }
+
+  _waTick() {
+    const step = this.waSequence[this._waStep];
+    this._waTimer = setTimeout(() => {
+      this.setState({ waBubbleText: step.text, waDotShow: true });
+      clearTimeout(this._waHideT);
+      this._waHideT = setTimeout(() => this.setState({ waBubbleText: '' }), 7000);
+      this._waStep = (this._waStep + 1) % this.waSequence.length;
+      this._waTick();
+    }, step.wait);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll);
+    clearTimeout(this._toastT);
+    clearTimeout(this._subT);
+    clearTimeout(this._waTimer);
+    clearTimeout(this._waHideT);
+    clearTimeout(this.cookieTimer);
+  }
+
+  loadCart() {
+    try { return JSON.parse(window.localStorage.getItem('lams-cart') || '[]'); } catch (e) { return []; }
+  }
+
+  addToCart(p) {
+    const cart = this.loadCart();
+    const existing = cart.find(i => i.slotId === p.slotId);
+    if (existing) existing.qty += 1;
+    else cart.push({ slotId: p.slotId, name: p.name, price: p.price, colorName: p.colorName, src: p.src, qty: 1 });
+    try { window.localStorage.setItem('lams-cart', JSON.stringify(cart)); } catch (e) {}
+    this.setState({ cartCount: cart.reduce((n, i) => n + i.qty, 0) });
+    this.showToast(p.name + ' añadida a la cesta');
+  }
+
+  showToast(msg) {
+    clearTimeout(this._toastT);
+    this.setState({ toastMsg: msg, toastShow: true });
+    this._toastT = setTimeout(() => this.setState({ toastShow: false }), 2800);
+  }
+
+  onBotSubmit(e) {
+    e.preventDefault();
+    const text = this.state.botInput.trim();
+    if (!text || this.state.botLoading) return;
+    this.setState(s => ({
+      botMessages: [...s.botMessages, { text, style: { alignSelf: 'flex-end', background: '#1a1a1e', color: '#F4F4F6', padding: '8px 12px', borderRadius: '10px', fontSize: '13px', maxWidth: '85%' } }],
+      botInput: '', botLoading: true,
+    }));
+    if (!this._botSessionId) this._botSessionId = 'web-' + Math.random().toString(36).slice(2);
+    fetch('https://n8n-n8n.kwtwgj.easypanel.host/webhook/arte-creativo-completo?key=714a2572a710151d07155979eaa4676a7f1f4f99ab6474fb', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message: text, sessionId: this._botSessionId }),
+    }).then(r => r.json()).then(data => {
+      const reply = (data && data.reply) || 'Gracias por tu mensaje, te responderemos pronto.';
+      this.setState(s => ({ botMessages: [...s.botMessages, { text: reply, style: { alignSelf: 'flex-start', background: '#1a0f22', color: '#D9D9D9', padding: '8px 12px', borderRadius: '10px', fontSize: '13px', maxWidth: '85%' } }], botLoading: false }));
+    }).catch(() => {
+      this.setState(s => ({ botMessages: [...s.botMessages, { text: 'No pudimos conectar con el asistente. Escríbenos por WhatsApp.', style: { alignSelf: 'flex-start', background: '#1a0f22', color: '#D9D9D9', padding: '8px 12px', borderRadius: '10px', fontSize: '13px', maxWidth: '85%' } }], botLoading: false }));
+    });
+  }
+
+  onContactSubmit(e) {
+    e.preventDefault();
+    const { contactName, contactEmail, contactPhone, contactMessage } = this.state;
+    const text = `Hola LAMS STUDIO, soy ${contactName || ''} (${contactEmail || ''}${contactPhone ? ', ' + contactPhone : ''}). ${contactMessage || ''}`;
+    window.open('https://wa.link/zkm04c', '_blank');
+  }
+
+  onSubscribe(e) {
+    e.preventDefault();
+    if (this.state.subscribed) return;
+    this.setState({ subscribed: true, email: '' });
+    this.showToast('Bienvenida · Revisa tu bandeja de entrada');
+    clearTimeout(this._subT);
+    this._subT = setTimeout(() => this.setState({ subscribed: false }), 5000);
+  }
+
+  renderVals() {
+    const ease = 'cubic-bezier(0.25,0.46,0.45,0.94)';
+    const valueCards = this.valueBase.map((v, i) => ({
+      ...v,
+      onEnter: () => this.setState({ hoveredValue: i }),
+      onLeave: () => this.setState({ hoveredValue: null }),
+      cardStyle: {
+        padding: '52px 44px',
+        borderRight: i < 2 ? '1px solid rgba(217,217,217,.1)' : 'none',
+        transition: 'background .25s',
+        background: this.state.hoveredValue === i ? '#2D0A3A' : 'transparent',
+      },
+    }));
+
+    const products = this.productBase.map((p, i) => {
+      const hovered = this.state.hoveredProduct === i;
+      return {
+        ...p,
+        onEnter: () => this.setState({ hoveredProduct: i }),
+        onLeave: () => this.setState({ hoveredProduct: null }),
+        onAdd: () => { this.addToCart(p); },
+        imgStyle: { width: '100%', height: '100%', transform: hovered ? 'scale(1.06)' : 'scale(1)', transition: 'transform .65s ' + ease },
+        overlayStyle: { position: 'absolute', inset: 0, background: hovered ? 'rgba(5,5,5,.22)' : 'rgba(5,5,5,0)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '20px', transition: 'background .3s' },
+        addStyle: { display: 'inline-flex', alignItems: 'center', gap: '7px', padding: '11px 22px', background: '#D9D9D9', color: '#050505', fontFamily: 'inherit', fontSize: '11px', fontWeight: 500, letterSpacing: '.08em', textTransform: 'uppercase', border: 'none', borderRadius: '3px', cursor: 'pointer', transform: hovered ? 'translateY(0)' : 'translateY(10px)', opacity: hovered ? 1 : 0, transition: 'opacity .3s ' + ease + ', transform .3s ' + ease },
+        swatchStyle: { width: '11px', height: '11px', borderRadius: '50%', border: '1px solid rgba(217,217,217,.25)', flexShrink: 0, background: p.colorHex, display: 'inline-block' },
+      };
+    });
+
+    const shirt3dColors = this.shirt3dColorBase.map((c, i) => ({
+      ...c,
+      onSelect: () => this.setState({ shirt3dColor: i }),
+      swatchStyle: {
+        width: '26px', height: '26px', borderRadius: '50%', background: c.hex, cursor: 'pointer',
+        border: this.state.shirt3dColor === i ? '2px solid #A76BE0' : '1px solid rgba(217,217,217,.25)',
+        padding: 0, boxShadow: this.state.shirt3dColor === i ? '0 0 0 2px #0B0B0B' : 'none',
+      },
+    }));
+    const shirt3dSizes = ['XS', 'S', 'M', 'L', 'XL'].map((label) => ({
+      label,
+      onSelect: () => this.setState({ shirt3dSize: label }),
+      btnStyle: {
+        padding: '9px 16px', fontSize: '13px', fontFamily: 'inherit', cursor: 'pointer',
+        border: this.state.shirt3dSize === label ? '1px solid #D9D9D9' : '1px solid rgba(217,217,217,.15)',
+        background: this.state.shirt3dSize === label ? '#D9D9D9' : '#111111',
+        color: this.state.shirt3dSize === label ? '#050505' : '#D9D9D9', borderRadius: '3px',
+      },
+    }));
+
+    return {
+      setRootRef: (el) => { this.rootEl = el; },
+      showCookies: this.state.cookies,
+      botOpen: this.state.botOpen,
+      botMessages: this.state.botMessages,
+      botLoading: this.state.botLoading,
+      botInput: this.state.botInput,
+      onToggleBot: () => this.setState(s => ({ botOpen: !s.botOpen })),
+      onBotInputChange: (e) => this.setState({ botInput: e.target.value }),
+      onBotSubmit: (e) => this.onBotSubmit(e),
+      acceptCookies: () => { try { window.localStorage.setItem('forma-cookie-consent', 'all'); } catch (err) {} this.setState({ cookies: false }); },
+      rejectCookies: () => { try { window.localStorage.setItem('forma-cookie-consent', 'necessary'); } catch (err) {} this.setState({ cookies: false }); },
+      testimonialsRowA: [...this.testimonialsBase, ...this.testimonialsBase],
+      testimonialsRowB: [...this.testimonialsBase.slice().reverse(), ...this.testimonialsBase.slice().reverse()],
+      shirt3dColors,
+      shirt3dColorName: this.shirt3dColorBase[this.state.shirt3dColor].name,
+      shirt3dSizes,
+      shirt3dSize: this.state.shirt3dSize,
+      contactName: this.state.contactName,
+      contactEmail: this.state.contactEmail,
+      contactPhone: this.state.contactPhone,
+      contactMessage: this.state.contactMessage,
+      onContactNameChange: (e) => this.setState({ contactName: e.target.value }),
+      onContactEmailChange: (e) => this.setState({ contactEmail: e.target.value }),
+      onContactPhoneChange: (e) => this.setState({ contactPhone: e.target.value }),
+      onContactMessageChange: (e) => this.setState({ contactMessage: e.target.value }),
+      onContactSubmit: (e) => this.onContactSubmit(e),
+      waLink: 'https://wa.link/zkm04c',
+      waBubbleText: this.state.waBubbleText,
+      waBubbleStyle: {
+        pointerEvents: 'auto', display: 'block', textDecoration: 'none', maxWidth: '256px', background: '#FFFFFF',
+        border: '1px solid rgba(0,0,0,.12)', borderRadius: '16px 16px 4px 16px', boxShadow: '0 18px 50px -12px rgba(0,0,0,.35)',
+        padding: '13px 16px', color: '#1A1614', fontFamily: 'inherit', fontSize: '14px', lineHeight: '1.42',
+        opacity: this.state.waBubbleText ? 1 : 0, transform: this.state.waBubbleText ? 'translateY(0) scale(1)' : 'translateY(10px) scale(.96)',
+        transformOrigin: 'bottom right', transition: 'opacity .45s cubic-bezier(.2,.8,.2,1), transform .45s cubic-bezier(.2,.8,.2,1)',
+      },
+      waDotStyle: {
+        position: 'absolute', top: '2px', right: '2px', minWidth: '18px', height: '18px', padding: '0 5px', borderRadius: '99px',
+        background: '#ff4d4d', color: '#fff', fontFamily: 'monospace', fontSize: '10.5px', fontWeight: 500, display: 'flex',
+        alignItems: 'center', justifyContent: 'center', border: '2px solid #fff',
+        opacity: this.state.waDotShow ? 1 : 0, transform: this.state.waDotShow ? 'scale(1)' : 'scale(0)', transition: 'opacity .3s, transform .3s',
+      },
+      videoSlots: [
+        { src: 'assets/video-1.mp4' },
+        { src: 'assets/video-2.mp4' },
+        { src: 'assets/video-3.mp4' },
+        { src: 'assets/video-4.mp4' },
+      ],
+      navBorderColor: this.state.navScrolled ? 'rgba(217,217,217,.12)' : 'transparent',
+      cartCount: this.state.cartCount,
+      onCartClick: () => this.showToast('Carrito disponible próximamente'),
+      onHeroEnter: () => this.setState({ heroHover: true }),
+      onHeroLeave: () => this.setState({ heroHover: false }),
+      heroImgStyle: { width: '100%', height: '100%', transform: this.state.heroHover ? 'scale(1.04)' : 'scale(1)', transition: 'transform .9s cubic-bezier(0.25,0.46,0.45,0.94)' },
+      valueCards,
+      products,
+      formStyle: {
+        display: 'flex', maxWidth: '460px', margin: '0 auto 20px', border: '1px solid ' + (this.state.emailFocused ? '#A76BE0' : 'rgba(217,217,217,.12)'), borderRadius: '3px', overflow: 'hidden', background: '#0B0B0B',
+        boxShadow: this.state.emailFocused ? '0 0 0 3px rgba(167,107,224,.15)' : 'none', transition: 'box-shadow .25s, border-color .25s',
+      },
+      emailValue: this.state.email,
+      emailPlaceholder: this.state.subscribed ? 'Ya estás suscrita ✓' : 'tu@email.com',
+      onEmailChange: (e) => this.setState({ email: e.target.value }),
+      onEmailFocus: () => this.setState({ emailFocused: true }),
+      onEmailBlur: () => this.setState({ emailFocused: false }),
+      subscribed: this.state.subscribed,
+      onSubscribe: (e) => this.onSubscribe(e),
+      subscribeBtnLabel: this.state.subscribed ? '¡Listo ✓' : 'Suscribirme',
+      subscribeBtnStyle: { padding: '16px 26px', background: this.state.subscribed ? '#4B1366' : '#D9D9D9', color: this.state.subscribed ? '#D9D9D9' : '#050505', fontFamily: 'inherit', fontSize: '11px', fontWeight: 500, letterSpacing: '.09em', textTransform: 'uppercase', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', transition: 'background .25s cubic-bezier(0.25,0.46,0.45,0.94), color .25s' },
+      subscribeBtnHoverStyle: { background: '#4B1366', color: '#D9D9D9' },
+      toastMsg: this.state.toastMsg,
+      toastStyle: {
+        position: 'fixed', bottom: '32px', left: '50%',
+        transform: this.state.toastShow ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(72px)',
+        background: '#111111', color: '#D9D9D9', padding: '13px 26px', borderRadius: '3px', fontSize: '13px', fontWeight: 500, letterSpacing: '.03em', zIndex: 1000,
+        border: '1px solid rgba(217,217,217,.15)',
+        transition: 'transform .4s cubic-bezier(0.25,0.46,0.45,0.94)', pointerEvents: 'none', whiteSpace: 'nowrap',
+      },
+    };
+  }
+}
+
+</script>
+</body>
+</html>

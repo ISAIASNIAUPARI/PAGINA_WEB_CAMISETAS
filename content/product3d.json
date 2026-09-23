@@ -1,0 +1,14 @@
+{
+  "eyebrow": "Pieza en 360°",
+  "title": "Camiseta esencial",
+  "price": 40,
+  "modelUrl": "https://res.cloudinary.com/foewxv45/raw/upload/v1788974257/web_con_animacion/camiseta_web.glb",
+  "colors": [
+    { "name": "Blanco natural", "hex": "#F0EAE0" },
+    { "name": "Azul marino", "hex": "#2A3A52" },
+    { "name": "Oliva", "hex": "#6B7A5A" },
+    { "name": "Terracota", "hex": "#C4714F" }
+  ],
+  "sizes": ["XS", "S", "M", "L", "XL"],
+  "note": "Envío gratis desde $60 · Devolución 30 días"
+}

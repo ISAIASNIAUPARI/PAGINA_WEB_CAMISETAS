@@ -1,0 +1,15 @@
+{
+  "eyebrow": "Sección 02 / Edición 09",
+  "title": "Colección",
+  "titleEm": "destacada.",
+  "products": [
+    { "id": "p-crudo", "name": "Algodón crudo", "code": "FR-001", "category": "Camisetas", "colorName": "Blanco natural", "colorHex": "#F0EAE0", "price": 38, "chip": "Nuevo", "image": "/images/algodon-crudo.webp" },
+    { "id": "p-noche", "name": "Noche atlántica", "code": "FR-014", "category": "Camisetas", "colorName": "Azul marino", "colorHex": "#2A3A52", "price": 42, "chip": "", "image": "/images/noche-atlantica.webp" },
+    { "id": "p-verde", "name": "Verde de campo", "code": "FR-027", "category": "Camisetas", "colorName": "Oliva", "colorHex": "#6B7A5A", "price": 40, "chip": "", "image": "/images/verde-de-campo.webp" },
+    { "id": "p-arcilla", "name": "Arcilla suave", "code": "FR-033", "category": "Camisetas", "colorName": "Terracota", "colorHex": "#C4714F", "price": 40, "chip": "Nuevo", "image": "/images/arcilla-suave.webp" },
+    { "id": "p-llama", "name": "Llama violeta", "code": "FR-041", "category": "Ediciones", "colorName": "Granate", "colorHex": "#5C1A24", "price": 52, "chip": "Final", "image": "/images/llama-violeta.webp" },
+    { "id": "p-tribal", "name": "Tribal eléctrico", "code": "FR-045", "category": "Ediciones", "colorName": "Negro", "colorHex": "#14161C", "price": 52, "chip": "", "image": "/images/tribal-electrico.webp" },
+    { "id": "p-ola", "name": "Ola del Pacífico", "code": "FR-052", "category": "Camisetas", "colorName": "Blanco", "colorHex": "#F0EAE0", "price": 40, "chip": "", "image": "/images/ola-del-pacifico.webp" },
+    { "id": "p-gris", "name": "Gris piedra", "code": "FR-058", "category": "Camisetas", "colorName": "Gris carbón", "colorHex": "#4A4A48", "price": 36, "chip": "", "image": "/images/gris-piedra.webp" }
+  ]
+}
