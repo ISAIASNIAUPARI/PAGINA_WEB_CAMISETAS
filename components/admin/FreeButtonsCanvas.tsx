@@ -558,7 +558,11 @@ export default function FreeButtonsCanvas({
         commitOverlay(EMPTY_OVERLAY)
       }}
     >
-      <div ref={containerRef} className="pointer-events-none absolute inset-0" style={{ zIndex: 5 }}>
+      {/* zIndex alto: el contenedor no captura eventos (pointer-events:none),
+          pero los botones deben quedar POR ENCIMA de las columnas de la
+          sección. En LAMS la portada tiene columnas con z-10 y con 5 los
+          botones se veían pero el clic caía en la columna: no se agarraban. */}
+      <div ref={containerRef} className="pointer-events-none absolute inset-0" style={{ zIndex: 40 }}>
         {buttons.map((b, i) => (
           <DraggableButton
             key={b.id}

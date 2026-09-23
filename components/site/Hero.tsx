@@ -4,8 +4,9 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import { useIsMobileView } from '@/components/admin/useIsMobileView'
 import { ButtonsArea } from '@/components/editable/ButtonsArea'
+import { EditableImage } from '@/components/editable/EditableImage'
 import { Img, SelectArea, TextStylesScope, Txt, useEditMode } from '@/components/editable/Editable'
-import { SideButton, SideField } from '@/components/editable/SelectArea'
+import { SideButton } from '@/components/editable/SelectArea'
 import { useTilt } from '@/components/motion'
 import { newButtonId, resolveButtonHref } from '@/lib/buttons'
 import type { HeroData, HeroSlide } from '@/lib/types'
@@ -13,6 +14,13 @@ import type { HeroData, HeroSlide } from '@/lib/types'
 import { money, useStore } from './Store'
 
 const ROTATE_MS = 4200
+
+function move<T>(list: T[], from: number, to: number): T[] {
+  const next = list.slice()
+  const [item] = next.splice(from, 1)
+  next.splice(to, 0, item)
+  return next
+}
 
 /** Botón 1 = relleno claro; los demás = enlace de texto. Mismo aspecto en sitio y admin. */
 export function heroButtonClass(i: number) {
@@ -45,40 +53,71 @@ export function Hero({ data, onChange }: { data: HeroData; onChange?: (d: HeroDa
 
   const setSlide = (i: number, patch: Partial<HeroSlide>) => set?.({ slides: slides.map((s, j) => (j === i ? { ...s, ...patch } : s)) })
 
-  const slideControls = (i: number) => () => {
-    const s = slides[i]
-    if (!s) return null
-    return (
-      <div>
-        <p className="mb-3 text-[11px] leading-snug text-white/55">
-          Foto {i + 1} de {slides.length} de la vitrina. Para cambiar la imagen, haz clic sobre la foto grande. Con los números de la izquierda eliges qué foto editar.
-        </p>
-        <SideField label="Nombre" value={s.name} onChange={(v) => setSlide(i, { name: v })} />
-        <SideField label="Detalle (color)" value={s.detail} onChange={(v) => setSlide(i, { detail: v })} />
-        <SideField label="Precio (USD)" type="number" value={s.price} onChange={(v) => setSlide(i, { price: Number(v) || 0 })} />
+  /** Sidebar de la vitrina: TODAS las fotos de la sección, cada una con su
+   *  "Cambiar imagen", punto focal, nombre, detalle y precio. */
+  const galleryControls = () => (
+    <div>
+      <p className="mb-3 text-[11px] leading-snug text-white/55">
+        Fotos de la vitrina de la portada ({slides.length}). Pasa el mouse sobre una foto para cambiarla; ⊕ elige el punto focal.
+      </p>
+      <div className="flex flex-col gap-4">
+        {slides.map((s, i) => (
+          <div key={s.id} className={`rounded-md border p-2 ${i === active ? 'border-[var(--color-primary)]' : 'border-white/15'}`}>
+            <div className="mb-2 flex items-center justify-between">
+              <button type="button" onClick={() => setActive(i)} className="text-[11px] font-semibold text-white/80 hover:text-white">
+                Foto {i + 1} {i === active ? '· en portada' : '· ver en portada'}
+              </button>
+              <div className="flex items-center gap-1">
+                <button type="button" title="Subir" disabled={i === 0} onClick={() => set?.({ slides: move(slides, i, i - 1) })} className="rounded px-1.5 text-white/70 hover:bg-white/10 disabled:opacity-30">
+                  ↑
+                </button>
+                <button type="button" title="Bajar" disabled={i === slides.length - 1} onClick={() => set?.({ slides: move(slides, i, i + 1) })} className="rounded px-1.5 text-white/70 hover:bg-white/10 disabled:opacity-30">
+                  ↓
+                </button>
+                {slides.length > 1 && (
+                  <button type="button" title="Quitar foto" onClick={() => { set?.({ slides: slides.filter((_, j) => j !== i) }); setActive(0) }} className="rounded px-1.5 text-[#ff9b9b] hover:bg-white/10">
+                    ×
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <div className="w-24 shrink-0 overflow-hidden rounded bg-[#f3f3f1]">
+                <EditableImage
+                  edit
+                  src={s.image.url}
+                  alt={s.image.alt}
+                  aspectRatio={4 / 5}
+                  className="relative block w-full"
+                  imgClassName="block aspect-[4/5] w-full object-cover"
+                  focalX={s.image.focalX}
+                  focalY={s.image.focalY}
+                  onChange={(url) => setSlide(i, { image: { ...s.image, url } })}
+                  onFocalChange={(x, y) => setSlide(i, { image: { ...s.image, focalX: x, focalY: y } })}
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <input value={s.name} onChange={(e) => setSlide(i, { name: e.target.value })} placeholder="Nombre" className="admin-sidebar-input mb-1.5" />
+                <input value={s.detail} onChange={(e) => setSlide(i, { detail: e.target.value })} placeholder="Color / detalle" className="admin-sidebar-input mb-1.5" />
+                <input type="number" value={s.price} onChange={(e) => setSlide(i, { price: Number(e.target.value) || 0 })} placeholder="Precio" className="admin-sidebar-input" />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-4">
         <SideButton
           onClick={() => {
-            const copy = { ...s, id: newButtonId(), name: `${s.name} (copia)` }
-            set?.({ slides: [...slides.slice(0, i + 1), copy, ...slides.slice(i + 1)] })
-            setActive(i + 1)
+            const last = slides[slides.length - 1]
+            set?.({ slides: [...slides, { ...last, id: newButtonId(), name: 'Nueva foto' }] })
+            setActive(slides.length)
           }}
         >
           + Añadir foto a la vitrina
         </SideButton>
-        {slides.length > 1 && (
-          <SideButton
-            danger
-            onClick={() => {
-              set?.({ slides: slides.filter((_, j) => j !== i) })
-              setActive(0)
-            }}
-          >
-            Quitar esta foto
-          </SideButton>
-        )}
       </div>
-    )
-  }
+    </div>
+  )
 
   return (
     <TextStylesScope styles={data} patch={set && ((st) => set(st))}>
@@ -167,6 +206,7 @@ export function Hero({ data, onChange }: { data: HeroData; onChange?: (d: HeroDa
           >
             <div className="relative w-full max-w-[min(520px,58svh)]">
               <div aria-hidden className="absolute -inset-10 rounded-full bg-[radial-gradient(closest-side,rgba(167,107,224,.28),transparent)] blur-2xl" />
+              <SelectArea label="Vitrina de la portada — fotos" controls={galleryControls}>
               <div ref={tilt} className="relative aspect-[4/5] transition-transform duration-300 ease-out [transform-style:preserve-3d]">
                 {slides.map((s, i) => {
                   const offset = (i - active + slides.length) % slides.length
@@ -186,17 +226,16 @@ export function Hero({ data, onChange }: { data: HeroData; onChange?: (d: HeroDa
                       <Img
                         image={s.image}
                         eager
-                        aspectRatio={4 / 5}
-                        onChange={set && ((img) => setSlide(i, { image: img }))}
                         imgClassName={`h-full w-full object-cover transition-transform duration-[4200ms] ease-linear ${offset === 0 && !paused && !edit ? 'scale-[1.08]' : 'scale-100'}`}
                       />
                     </div>
                   )
                 })}
               </div>
+              </SelectArea>
 
               <div className="absolute right-4 -bottom-6 z-20 @2xl:right-8">
-                <SelectArea label={`Vitrina — foto ${active + 1}`} controls={slideControls(active)}>
+                <SelectArea label="Vitrina de la portada — fotos" controls={galleryControls}>
                   <div className="flex items-center gap-4 rounded-[4px] border border-fog/15 bg-ink-3/85 py-3 pr-3 pl-5 backdrop-blur-md">
                     <div className="min-w-[120px]">
                       <span className="block text-base font-medium tracking-[-.01em] text-snow">{current.name}</span>

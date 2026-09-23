@@ -10,13 +10,21 @@
       "id": "btn-hero-1",
       "text": "Ver la colección",
       "href": "#coleccion",
-      "hrefType": "anchor"
+      "hrefType": "anchor",
+      "desktopX": 13.6,
+      "desktopY": 83.5,
+      "mobileX": 36.5,
+      "mobileY": 49.1
     },
     {
       "id": "btn-hero-2",
       "text": "Nuestra historia",
       "href": "#nosotros",
-      "hrefType": "anchor"
+      "hrefType": "anchor",
+      "desktopX": 28.1,
+      "desktopY": 83.5,
+      "mobileX": 20.6,
+      "mobileY": 54.7
     }
   ],
   "slides": [

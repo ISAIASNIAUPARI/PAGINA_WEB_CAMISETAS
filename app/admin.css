@@ -158,14 +158,13 @@
 
 /* Marco móvil del preview: el sitio usa container queries (@container), así
    que dentro de este marco de 390px se ve exactamente como en un teléfono.
-   El transform hace que lo "fixed" del sitio (menú, carrito) quede dentro
-   del marco en vez de pegarse a la ventana del admin. */
+   Sin altura fija: el marco crece hacia abajo con la página completa y se
+   recorre con el scroll del preview (igual que en La Gloria). El transform
+   mantiene lo "fixed" del sitio (p. ej. el carrito) dentro del marco. */
 .admin-mobile-frame {
   width: 390px;
   max-width: 100%;
-  height: min(844px, calc(100vh - 140px));
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   transform: translateZ(0);
   border: 8px solid #1c1c1a;
   border-radius: 2rem;
