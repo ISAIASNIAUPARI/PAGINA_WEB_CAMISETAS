@@ -1,0 +1,59 @@
+/* Tormenta de identidad — estilos encapsulados (CSS Modules). Usa los tokens del tema del sitio. */
+.section { position: relative; background: #050505; }
+.stage {
+  --u: 8px; --cx: 50%; --cy: 50%; --k: .82;
+  position: relative; height: 100vh; height: 100svh; overflow: hidden; isolation: isolate;
+  background:
+    radial-gradient(900px 620px at 58% 52%, rgb(75 19 102 / 0.28), transparent 62%),
+    radial-gradient(700px 500px at 0% 100%, rgb(45 10 58 / 0.35), transparent 60%),
+    #050505;
+}
+.glow {
+  position: absolute; left: var(--cx); top: var(--cy); width: calc(var(--u) * 70); aspect-ratio: 1;
+  transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgb(205 182 228 / 0.08), transparent 70%);
+  border: 1px solid rgb(217 217 217 / 0.06);
+}
+.layer { position: absolute; inset: 0; z-index: 2; pointer-events: none; will-change: transform; }
+.item { position: absolute; height: auto; max-width: none; user-select: none; opacity: 0; visibility: hidden; will-change: transform, opacity; }
+.shadow { filter: drop-shadow(0 18px 24px rgb(0 0 0 / 0.55)); }
+
+.shirt {
+  position: absolute; left: var(--cx); top: var(--cy); z-index: 1;
+  width: calc(var(--u) * 26); aspect-ratio: 3 / 4; margin: calc(var(--u) * -17.3) 0 0 calc(var(--u) * -13);
+  background: #f4f4f6; overflow: hidden; opacity: 0; visibility: hidden;
+  box-shadow: 0 40px 80px rgb(0 0 0 / 0.55), 0 0 0 1px rgb(217 217 217 / 0.12);
+}
+.shirt img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.copies { position: absolute; left: clamp(20px, 5vw, 80px); top: 50%; transform: translateY(-50%); z-index: 3; display: grid; width: min(30vw, 420px); pointer-events: none; }
+.copy { grid-area: 1 / 1; opacity: 0; transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
+.copy:first-child { opacity: 1; }
+.eyebrow { font-family: var(--font-jetbrains), ui-monospace, monospace; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--color-mute, #8f9399); margin: 0 0 20px; }
+.title { font-size: clamp(36px, 4.2vw, 64px); line-height: 1.02; letter-spacing: -.035em; font-weight: 400; color: #f4f4f6; margin: 0; }
+.title em, .text em { font-family: var(--font-instrument), serif; font-style: italic; color: var(--color-accent, #cdb6e4); }
+.title em { display: block; }
+.text { margin: 20px 0 0; max-width: 32ch; font-size: 15px; line-height: 1.7; color: #8f9399; }
+
+.finale { position: absolute; left: clamp(20px, 5vw, 80px); top: 50%; transform: translateY(-50%); z-index: 4; width: min(32vw, 440px); opacity: 0; visibility: hidden; }
+.brand { margin: 0; font-size: clamp(56px, 7vw, 116px); line-height: .9; letter-spacing: -.05em; font-weight: 600; color: #f4f4f6; }
+.brand span { display: block; font-family: var(--font-instrument), serif; font-style: italic; font-weight: 400; letter-spacing: -.02em; color: var(--color-accent, #cdb6e4); }
+.cta { display: inline-flex; gap: 12px; align-items: center; margin-top: 30px; padding: 14px 22px; border: 1px solid rgb(217 217 217 / 0.35); color: #f4f4f6; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; transition: background .3s, color .3s, border-color .3s; }
+.cta:hover { background: #f4f4f6; color: #050505; border-color: #f4f4f6; }
+.cta span { transition: transform .4s cubic-bezier(.22,1,.36,1); }
+.cta:hover span { transform: translateX(4px); }
+.cta:focus-visible { outline: 2px solid var(--color-accent, #cdb6e4); outline-offset: 4px; }
+
+.bar { position: absolute; left: clamp(20px, 5vw, 80px); right: clamp(20px, 5vw, 80px); bottom: 28px; height: 1px; background: rgb(217 217 217 / 0.12); z-index: 5; }
+.bar i { position: absolute; inset: 0; background: var(--color-primary, #a76be0); transform-origin: left; transform: scaleX(0); }
+
+@media (max-width: 767px) {
+  .stage { --k: 1.5; }
+  .copies, .finale { left: 20px; right: 20px; top: auto; bottom: 64px; transform: none; width: auto; }
+  .title { font-size: clamp(32px, 9.5vw, 44px); }
+  .text { font-size: 14px; margin-top: 12px; }
+  .eyebrow { margin-bottom: 12px; }
+  .brand { font-size: clamp(52px, 16vw, 72px); }
+  .cta { margin-top: 18px; }
+  .shirt { width: calc(var(--u) * 44); margin: calc(var(--u) * -29.3) 0 0 calc(var(--u) * -22); }
+}
