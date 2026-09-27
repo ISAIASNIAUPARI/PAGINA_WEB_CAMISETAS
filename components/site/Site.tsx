@@ -6,7 +6,6 @@ import { useEditMode } from '@/components/editable/Editable'
 import { MotionRoot } from '@/components/motion'
 import { DynamicSection } from '@/components/sections/DynamicSection'
 import type { Content, DynamicSectionType } from '@/lib/types'
-import IdentityStorm from '@/components/storm/IdentityStorm'
 
 import { About } from './About'
 import { Collection } from './Collection'
@@ -55,8 +54,6 @@ export function Site({
   }
 
   const sections = c.pageLayout.sections.filter((s) => edit || s.visible)
-  // Sección visual independiente (solo sitio público, nunca en /admin): va después de "Nosotros".
-  const stormAfter = sections.some((s) => s.id === 'about') ? 'about' : 'collection'
 
   return (
     <StoreProvider>
@@ -77,12 +74,7 @@ export function Site({
               base[s.id]?.() ?? null
             )
             if (!node) return null
-            return (
-              <React.Fragment key={s.id}>
-                {renderWrapper ? renderWrapper(s.id, i, node) : node}
-                {!edit && s.id === stormAfter && <IdentityStorm />}
-              </React.Fragment>
-            )
+            return <React.Fragment key={s.id}>{renderWrapper ? renderWrapper(s.id, i, node) : node}</React.Fragment>
           })}
         </main>
         <Footer brand={c.siteSettings.brand} data={c.footer} social={c.social.links} onChange={on('footer')} />
