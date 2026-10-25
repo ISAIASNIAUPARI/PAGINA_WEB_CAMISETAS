@@ -9,7 +9,7 @@
     },
     {
       "name": "Carlos M.",
-      "text": "Me daba miedo fallar con la talla, pero la guía es exacta. La camiseta es de gran calidad.",
+      "text": "Me daba miedo fallar con la talla, pero la guía es exacta. La camiseta es de gran calidad qu.e llama la atencion ",
       "id": "t-2"
     },
     {
@@ -22,5 +22,11 @@
       "text": "Compré tres colores distintos, todos con el mismo corte perfecto. Ya es mi marca de confianza.",
       "id": "t-4"
     }
-  ]
+  ],
+  "textColors": {
+    "items.t-2.text": "primary"
+  },
+  "textWeights": {
+    "items.t-2.text": 700
+  }
 }

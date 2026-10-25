@@ -1,16 +1,16 @@
 {
   "brand": "LAMS STUDIO",
-  "freeShippingFrom": 60,
+  "freeShippingFrom": 61,
   "shippingCost": 6,
   "whatsappEnabled": true,
   "whatsappLink": "https://wa.link/zkm04c",
   "whatsappNotifications": [
     {
-      "text": "¿Buscas ayuda con tu talla?",
+      "text": "Nuevas piezas cada temporada",
       "enabled": true
     },
     {
-      "text": "Nuevas piezas cada temporada",
+      "text": "¿Buscas ayuda con tu talla?",
       "enabled": true
     },
     {

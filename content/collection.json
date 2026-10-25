@@ -13,7 +13,7 @@
       "price": 38,
       "chip": "Nuevo",
       "image": {
-        "url": "/images/algodon-crudo.webp",
+        "url": "https://res.cloudinary.com/foewxv45/image/upload/f_auto,q_auto/v1792950308/lams-studio/csevfgqaezymavwjfqcn",
         "alt": "Algodón crudo"
       }
     },
@@ -75,7 +75,7 @@
     },
     {
       "id": "p-tribal",
-      "name": "Tribal eléctrico",
+      "name": "Tribal eléctrico azulado",
       "code": "FR-045",
       "category": "Ediciones",
       "colorName": "Negro",
@@ -113,6 +113,34 @@
       "image": {
         "url": "/images/gris-piedra.webp",
         "alt": "Gris piedra"
+      }
+    },
+    {
+      "id": "p-81d3c7f5",
+      "name": "Nuevo producto",
+      "code": "FR-000",
+      "category": "Camisetas",
+      "colorName": "Color",
+      "colorHex": "#8F9399",
+      "price": 40,
+      "chip": "Nuevo",
+      "image": {
+        "url": "/images/gris-piedra.webp",
+        "alt": "Nuevo producto"
+      }
+    },
+    {
+      "id": "p-680413bb",
+      "name": "Nuevo producto",
+      "code": "FR-000",
+      "category": "Camisetas",
+      "colorName": "Color",
+      "colorHex": "#8F9399",
+      "price": 40,
+      "chip": "Nuevo",
+      "image": {
+        "url": "/images/gris-piedra.webp",
+        "alt": "Nuevo producto"
       }
     }
   ]

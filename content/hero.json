@@ -1,8 +1,8 @@
 {
   "eyebrow": "Nueva colección · Otoño 2026",
   "line1": "LO QUE LLEVAS",
-  "line2": "CADA DÍA",
-  "line3": "importa.",
+  "line2": "CADA DÍA SI",
+  "line3": "importa .Y MUCHO",
   "body": "Camisetas de algodón premium en colores que duran más allá de las temporadas. Sin tendencias. Sin distracciones. Solo la pieza perfecta.",
   "scrollHint": "Desliza para explorar",
   "buttons": [
@@ -89,9 +89,12 @@
       "price": 52
     }
   ],
-  "textColors": {},
+  "textColors": {
+    "line2": "primary",
+    "line3": "primary"
+  },
   "textWeights": {
-    "line2": 700
+    "line2": 600
   },
   "textSizes": {}
 }
