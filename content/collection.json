@@ -114,34 +114,6 @@
         "url": "/images/gris-piedra.webp",
         "alt": "Gris piedra"
       }
-    },
-    {
-      "id": "p-81d3c7f5",
-      "name": "Nuevo producto",
-      "code": "FR-000",
-      "category": "Camisetas",
-      "colorName": "Color",
-      "colorHex": "#8F9399",
-      "price": 40,
-      "chip": "Nuevo",
-      "image": {
-        "url": "/images/gris-piedra.webp",
-        "alt": "Nuevo producto"
-      }
-    },
-    {
-      "id": "p-680413bb",
-      "name": "Nuevo producto",
-      "code": "FR-000",
-      "category": "Camisetas",
-      "colorName": "Color",
-      "colorHex": "#8F9399",
-      "price": 40,
-      "chip": "Nuevo",
-      "image": {
-        "url": "/images/gris-piedra.webp",
-        "alt": "Nuevo producto"
-      }
     }
   ]
 }

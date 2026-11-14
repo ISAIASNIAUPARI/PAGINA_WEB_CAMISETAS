@@ -1,6 +1,6 @@
 {
-  "title": "Ropa con la que no tienes que",
-  "titleEm": "pensar.",
+  "title": "Ropa con la que puedes",
+  "titleEm": "destacar",
   "body": "Diseñamos para la realidad de cada mañana. Piezas que se combinan solas, que no piden atención, que simplemente funcionan cuando las necesitas.",
   "values": [
     {
@@ -21,5 +21,6 @@
       "desc": "Ni oversized de temporada, ni slim del año pasado. Un patrón estudiado para mantenerse bien lavado tras lavado, año tras año, sin concesiones.",
       "id": "val-03"
     }
-  ]
+  ],
+  "textWeights": {}
 }
